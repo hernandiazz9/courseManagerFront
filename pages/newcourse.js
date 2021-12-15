@@ -2,8 +2,51 @@ import React from "react";
 import Layout from "../component/Layout";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useQuery,useMutation, gql } from "@apollo/client";
+import { useRouter } from "next/router";
+
+const NEW_COURSE = gql`
+  mutation NewCourse($input: CourseInput) {
+    newCourse(input: $input) {
+      id
+      title
+      startDate
+      startTime
+      courseLength
+      instructor
+      studentList
+    }
+  }
+`;
+const GET_COURSES = gql`
+  query GetCourses {
+    getCourses {
+      id
+      title
+      startDate
+      studentList
+      startTime
+      courseLength
+      instructor
+    }
+  }
+`;
 
 const NewCourse = () => {
+  useQuery(GET_COURSES);
+  const router = useRouter();
+  const [newCourse] = useMutation(NEW_COURSE, {
+    update(cache, { data: { newCourse } }) {
+      const { getCourses } = cache.readQuery({ query: GET_COURSES });
+      cache.writeQuery({
+        query: GET_COURSES,
+        data: {
+          getCourses: [...getCourses, newCourse],
+        },
+      });
+    },
+  });
+
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -17,12 +60,38 @@ const NewCourse = () => {
       title: Yup.string().required("Title is Require"),
       startDate: Yup.date().required("Date is Require"),
       startTime: Yup.string().required("Start Time is Require"),
-      courseLength: Yup.number().required("Course Lengthis Require"),
-      instrctor: Yup.string().required("Instructor is Require"),
+      courseLength: Yup.string().required("Course Lengthis Require"),
+      instructor: Yup.string().required("Instructor is Require"),
       studentList: Yup.string().required("Student List is Require"),
     }),
-    onSubmit: (valores) => {
+    onSubmit: async (valores) => {
       console.log(valores);
+      const {
+        title,
+        startDate,
+        startTime,
+        courseLength,
+        instructor,
+        studentList,
+      } = valores;
+      try {
+        const { data } = await newCourse({
+          variables: {
+            input: {
+              title,
+              startDate,
+              startTime,
+              courseLength,
+              instructor: "61b70142896cdcdfdcaf5b5e",
+              studentList: "61b73c232582c17e2823ebc9",
+            },
+          },
+        });
+        console.log(data.newCourse, "/////");
+        router.push("/");
+      } catch (error) {
+        console.log(error, "Error");
+      }
     },
   });
   return (
@@ -109,7 +178,7 @@ const NewCourse = () => {
               </label>
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                type="number"
+                type="text"
                 id="courseLength"
                 placeholder="ej: 1.5 hs"
                 onChange={formik.handleChange}

@@ -8,7 +8,7 @@ import Edit from "../component/courses/Edit";
 import Delete from "../component/courses/Delete";
 import Link from "next/link";
 
-const COURSES = gql`
+const GET_COURSES = gql`
   query GetCourses {
     getCourses {
       id
@@ -23,7 +23,7 @@ const COURSES = gql`
 `;
 
 const Courses = () => {
-  const { data, loading } = useQuery(COURSES);
+  const { data, loading } = useQuery(GET_COURSES);
   console.log(data);
 
   return (
@@ -55,7 +55,7 @@ const Courses = () => {
                       </div>
                       <div className="ml-2  flex-shrink-0 flex flex-col">
                         <Edit />
-                        <Delete />
+                        <Delete id={course.id} />
                       </div>
                     </div>
                   </div>
