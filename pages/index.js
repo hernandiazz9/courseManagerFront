@@ -1,6 +1,12 @@
 import React from "react";
 import Layout from "../component/Layout";
 import { useQuery, gql } from "@apollo/client";
+import Date from "../component/courses/Date";
+import Instructor from "../component/courses/Instructor";
+import StudentList from "../component/courses/StudentList";
+import Edit from "../component/courses/Edit";
+import Delete from "../component/courses/Delete";
+import Link from "next/link";
 
 const COURSES = gql`
   query GetCourses {
@@ -19,144 +25,46 @@ const COURSES = gql`
 const Courses = () => {
   const { data, loading } = useQuery(COURSES);
   console.log(data);
+
   return (
-    <div>
-      <Layout>
-        <h1 className="text-2xl hidden md:block text-center md:text-left text-gray-800 pb-5 font-light">Courses</h1>
-        <div className="flex flex-col">
-          <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-              <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="sm:px-2 md:px-3 xl:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider break-all"
-                      >
-                        Title
-                      </th>
-                      <th
-                        scope="col"
-                        className="sm:px-2 md:px-3 xl:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider break-all"
-                      >
-                        Start
-                      </th>
-                      <th
-                        scope="col"
-                        className="sm:px-2 md:px-3 xl:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider break-all"
-                      >
-                        Length
-                      </th>
-                      <th
-                        scope="col"
-                        className="sm:px-2 md:px-3 xl:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider break-all "
-                      >
-                        Instructor
-                      </th>
-                      <th
-                        scope="col"
-                        className="sm:px-1 md:px-3 xl:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider break-all"
-                      >
-                        Students
-                      </th>
-                      <th scope="col" className="relative  py-3">
-                        <span className="sr-only">edit-delet</span>
-                      </th>
-                      {/* <th scope="col" className="relative px-6 py-3">
-                        <span className="sr-only">Delete</span>
-                      </th> */}
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {!loading &&
-                      data.getCourses.map((course) => (
-                        <tr key={course.id}>
-                          <td className="sm:px-1 md:px-3 xl:px-6 py-4 whitespace-wrap text-sm text-black-800">
-                            {course.title}
-                          </td>
-                          <td className="sm:px-1 md:px-3 xl:px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">
-                              {/* {course.startDate} */}
-                              12/10/2021
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              {course.startTime}
-                            </div>
-                          </td>
-                          <td className="sm:px-1 md:px-3 xl:px-6 py-4 whitespace-nowrap">
-                            <span className="p-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                              {course.courseLength}
-                            </span>
-                          </td>
-                          <td className="sm:px-1 md:px-3 xl:px-6 py-4 whitespace-wrap  text-sm text-black-800">
-                            {/* {course.instructor}
-                             */}
-                            hernan diaz
-                          </td>
-                          <td className="sm:px-1 md:px-3 xl:px-6 py-4 whitespace-wrap  text-sm text-black-800">
-                            {/* {course.studentList} */}
-                            juan carlos
-                          </td>
-                          <td className="sm:px-1 md:px-3 xl:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <div className="flex md:justify-between flex-col xl:flex-row ">
-                              <a
-                                href="#"
-                                className="text-indigo-600 hover:text-indigo-900"
-                              >
-                                L
-                              </a>
-                              <a
-                                href="#"
-                                className="text-indigo-600 hover:text-indigo-900"
-                              >
-                                X
-                              </a>
-                            </div>
-                          </td>
-                          {/* <td className="sm:px-1 md:px-3 xl:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a
-                              href="#"
-                              className="text-indigo-600 hover:text-indigo-900"
-                            >
-                              X
-                            </a>
-                          </td> */}
-                        </tr>
-                        
-                      ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* <table className="table-auto shadow-md mt-10 w-full w-lg">
-          <thead className='bg-gray-700'>
-            <tr className="text-white">
-              <th className="w-1/6 py-2 ">Title</th>
-              <th className="w-1/6 py-2 ">Start Date</th>
-              <th className="w-1/6 py-2 ">Start Time</th>
-              <th className="w-1/6 py-2 ">Course Length</th>
-              <th className="w-1/6 py-2 ">Instructor</th>
-              <th className="w-1/6 py-2 ">Students</th>
-            </tr>
-          </thead>
-          <tbody className='bg-white'>
-            {!loading&&data.getCourses.map(course=>(
-              <tr key={course.id}>
-                <td className="border px-4 py-2">{course.title}</td>
-                <td className="border px-4 py-2">{course.startDate}</td>
-                <td className="border px-4 py-2">{course.startTime}</td>
-                <td className="border px-4 py-2">{course.courseLength}</td>
-                <td className="border px-4 py-2">{course.instructor}</td>
-                <td className="border px-4 py-2">{course.studentList}</td>
-              </tr>
+    <Layout>
+      <h1 className="text-4xl mt-4 text-center hidden md:block leading-6 font-medium text-black">
+        Courses
+      </h1>
+
+      <Link href="newcourse">
+        <a className="bg-blue-700 py-2 px-5 mt-2 inline-block text-white rounded text-sm uppercase hover:bg-gray-700 font-bold mb-10">
+          New Course
+        </a>
+      </Link>
+      <div className="bg-white shadow overflow-hidden sm:rounded-md">
+        <ul className="divide-y divide-gray-200">
+          {!loading &&
+            data.getCourses.map((course) => (
+              <li key={course.id}>
+                <div className="block py-2 hover:bg-gray-50 tracking-wider">
+                  <div className="px-4 py-4 sm:px-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xl font-bold  text-gray-700 truncate">
+                          {course.title}
+                        </p>
+                        <Date course={course} />
+                        <Instructor course={course} />
+                        <StudentList course={course} />
+                      </div>
+                      <div className="ml-2  flex-shrink-0 flex flex-col">
+                        <Edit />
+                        <Delete />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
             ))}
-          </tbody>
-        </table> */}
-      </Layout>
-    </div>
+        </ul>
+      </div>
+    </Layout>
   );
 };
 
