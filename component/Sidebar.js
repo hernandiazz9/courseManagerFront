@@ -7,10 +7,10 @@ const Sidebar = () => {
    const router = useRouter()
 
   return (
-    <aside className="bg-gray-800    p-5">
+    <aside className="bg-gray-800 md:w-1/4 xl:w-2/7 p-5">
       <p className="text-white text-2xl font-black">Course Manager</p>
 
-      <nav className="mt-5 list-none flex flex-row 	xl:flex-col">
+      <nav className="mt-5 list-none flex flex-row 	md:flex-col">
          <li className={router.pathname === '/'?'bg-blue-800 p-2':'p-2'}>
             <Link href='/'>
                <a className='text-white  block'>

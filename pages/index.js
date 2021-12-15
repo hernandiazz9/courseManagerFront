@@ -22,7 +22,7 @@ const Courses = () => {
   return (
     <div>
       <Layout>
-        <h1 className="text-2xl text-gray-800 pb-5 font-light">Courses</h1>
+        <h1 className="text-2xl hidden md:block text-center md:text-left text-gray-800 pb-5 font-light">Courses</h1>
         <div className="flex flex-col">
           <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -32,31 +32,31 @@ const Courses = () => {
                     <tr>
                       <th
                         scope="col"
-                        className="sm:px-2 md:px-3 xl:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="sm:px-2 md:px-3 xl:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider break-all"
                       >
                         Title
                       </th>
                       <th
                         scope="col"
-                        className="sm:px-2 md:px-3 xl:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="sm:px-2 md:px-3 xl:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider break-all"
                       >
                         Start
                       </th>
                       <th
                         scope="col"
-                        className="sm:px-2 md:px-3 xl:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="sm:px-2 md:px-3 xl:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider break-all"
                       >
                         Length
                       </th>
                       <th
                         scope="col"
-                        className="sm:px-2 md:px-3 xl:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider "
+                        className="sm:px-2 md:px-3 xl:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider break-all "
                       >
                         Instructor
                       </th>
                       <th
                         scope="col"
-                        className="sm:px-1 md:px-3 xl:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        className="sm:px-1 md:px-3 xl:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider break-all"
                       >
                         Students
                       </th>
@@ -99,7 +99,7 @@ const Courses = () => {
                             juan carlos
                           </td>
                           <td className="sm:px-1 md:px-3 xl:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <div className="flex md:justify-between sm:flex-col xl:flex-row ">
+                            <div className="flex md:justify-between flex-col xl:flex-row ">
                               <a
                                 href="#"
                                 className="text-indigo-600 hover:text-indigo-900"
@@ -123,6 +123,7 @@ const Courses = () => {
                             </a>
                           </td> */}
                         </tr>
+                        
                       ))}
                   </tbody>
                 </table>

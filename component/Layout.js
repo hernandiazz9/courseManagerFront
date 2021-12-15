@@ -19,7 +19,7 @@ const Layout = ({ children }) => {
       <div className="bg-gray-200 ">
         <div className=" flex flex-col  md:flex-row  sm:min-w-screen md:min-h-screen ">
           <Sidebar />
-          <main className="sm:w-full xl:w-4/5  p-5">
+          <main className="sm:w-full md:w-3/4 p-1   md:p-5">
             {children}
           </main>
         </div>
