@@ -16,10 +16,10 @@ const Layout = ({ children }) => {
         />
         <script src="https://cdn.tailwindcss.com"></script>
       </Head>
-      <div className="bg-gray-200 min-h-screen">
-        <div className=" flex  min-h-screen">
+      <div className="bg-gray-200 ">
+        <div className=" flex flex-col  md:flex-row  sm:min-w-screen md:min-h-screen ">
           <Sidebar />
-          <main className="sm:w-2/3 xl:w-4/5 sm:min-h-screen p-5">
+          <main className="sm:w-full xl:w-4/5  p-5">
             {children}
           </main>
         </div>
