@@ -1,5 +1,5 @@
 
-import { ApolloClient, ApolloProvider } from "@apollo/client";
+import {  ApolloProvider } from "@apollo/client";
 
 import client from "../config/apollo";
 

@@ -1,10 +1,11 @@
 import React from "react";
-import { useQuery,useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation, gql } from "@apollo/client";
+import Swal from "sweetalert2";
 
-const DELETE_COURSE= gql`
+const DELETE_COURSE = gql`
   mutation DeleteCourse($deleteCourseId: ID!) {
-  deleteCourse(id: $deleteCourseId)
-}
+    deleteCourse(id: $deleteCourseId)
+  }
 `;
 const GET_COURSES = gql`
   query GetCourses {
@@ -19,33 +20,46 @@ const GET_COURSES = gql`
     }
   }
 `;
-const Delete = ({id}) => {
-
+const Delete = ({ id }) => {
   const [deleteCourse] = useMutation(DELETE_COURSE, {
-    update(cache, { data: { newCourse } }) {
+    update(cache) {
       const { getCourses } = cache.readQuery({ query: GET_COURSES });
       cache.writeQuery({
         query: GET_COURSES,
         data: {
-          getCourses: [...getCourses, newCourse],
+          getCourses: getCourses.filter((course) => course.id !== id),
         },
       });
     },
   });
 
   const handleClick = async () => {
-    const { data } = await deleteCourse({
-      variables: {
-        deleteCourseId: id
-      },
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const { data } = await deleteCourse({
+            variables: {
+              deleteCourseId: id,
+            },
+          });
+          console.log(data.deleteCourse);
+          Swal.fire("Deleted!", data.deleteCourse, "success");
+        } catch (error) {
+          console.log(error);
+        }
+      }
     });
-    console.log(data.deleteCourse);
-  }
+  };
   return (
-    <button
-      type='button'
-      onClick={handleClick}
-    >
+    <button type="button" onClick={handleClick}>
       <p className="px-2 text-center inline-flex text-xs leading-5 font-semibold uppercase rounded-full bg-green-100 text-green-800">
         delete
       </p>

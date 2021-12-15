@@ -23,8 +23,8 @@ const GET_COURSES = gql`
 `;
 
 const Courses = () => {
-  const { data, loading } = useQuery(GET_COURSES);
-  console.log(data);
+  const { data, loading } = useQuery(GET_COURSES); 
+  // console.log(data);
 
   return (
     <Layout>
@@ -32,7 +32,7 @@ const Courses = () => {
         Courses
       </h1>
 
-      <Link href="newcourse">
+      <Link href="/newcourse">
         <a className="bg-blue-700 py-2 px-5 mt-2 inline-block text-white rounded text-sm uppercase hover:bg-gray-700 font-bold mb-10">
           New Course
         </a>
@@ -54,7 +54,7 @@ const Courses = () => {
                         <StudentList course={course} />
                       </div>
                       <div className="ml-2  flex-shrink-0 flex flex-col">
-                        <Edit />
+                        <Edit course={course}  />
                         <Delete id={course.id} />
                       </div>
                     </div>
