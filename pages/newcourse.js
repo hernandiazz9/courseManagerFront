@@ -2,7 +2,6 @@ import React from "react";
 import Layout from "../component/Layout";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { validateSchema } from "graphql";
 
 const NewCourse = () => {
   const formik = useFormik({
@@ -11,10 +10,10 @@ const NewCourse = () => {
       startDate: "",
       startTime: "",
       courseLength: "",
-      instrctor: "",
+      instructor: "",
       studentList: "",
     },
-    validateSchema: Yup.object({
+    validationSchema: Yup.object({
       title: Yup.string().required("Title is Require"),
       startDate: Yup.date().required("Date is Require"),
       startTime: Yup.string().required("Start Time is Require"),
@@ -33,7 +32,10 @@ const NewCourse = () => {
       </h1>
       <div className="flex justify-center ">
         <div className="w-full max-w-lg">
-          <form className="bg-white shadow-md px-8 pt-6 pb-8 mb-4">
+          <form
+            onSubmit={formik.handleSubmit}
+            className="bg-white shadow-md px-8 pt-6 pb-8 mb-4"
+          >
             <div className="mb-4">
               <label
                 htmlFor="title"
@@ -46,13 +48,12 @@ const NewCourse = () => {
                 type="text"
                 id="title"
                 placeholder="Corse Title.."
-                required
                 onChange={formik.handleChange}
-                onBlur={formik.handleChange}
+                onBlur={formik.handleBlur}
                 value={formik.values.title}
               />
               {formik.touched.title && formik.errors.title ? (
-                <div className="my-2 bg-red-100 border-l-4 border-red-500 text-red-700 p-5 ">
+                <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
                   <p className="font-bold">{formik.errors.title}</p>
                 </div>
               ) : null}
@@ -69,9 +70,14 @@ const NewCourse = () => {
                 type="date"
                 id="startDate"
                 onChange={formik.handleChange}
-                onBlur={formik.handleChange}
+                onBlur={formik.handleBlur}
                 value={formik.values.startDate}
               />
+              {formik.touched.startDate && formik.errors.startDate ? (
+                <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
+                  <p className="font-bold">{formik.errors.startDate}</p>
+                </div>
+              ) : null}
             </div>
             <div className="mb-4">
               <label
@@ -85,9 +91,14 @@ const NewCourse = () => {
                 type="time"
                 id="startTime"
                 onChange={formik.handleChange}
-                onBlur={formik.handleChange}
+                onBlur={formik.handleBlur}
                 value={formik.values.startTime}
               />
+              {formik.touched.startTime && formik.errors.startTime ? (
+                <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
+                  <p className="font-bold">{formik.errors.startTime}</p>
+                </div>
+              ) : null}
             </div>
             <div className="mb-4">
               <label
@@ -102,9 +113,14 @@ const NewCourse = () => {
                 id="courseLength"
                 placeholder="ej: 1.5 hs"
                 onChange={formik.handleChange}
-                onBlur={formik.handleChange}
+                onBlur={formik.handleBlur}
                 value={formik.values.courseLength}
               />
+              {formik.touched.courseLength && formik.errors.courseLength ? (
+                <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
+                  <p className="font-bold">{formik.errors.courseLength}</p>
+                </div>
+              ) : null}
             </div>
             <div className="mb-4">
               <label
@@ -119,9 +135,14 @@ const NewCourse = () => {
                 id="instructor"
                 placeholder="Select the Instructor"
                 onChange={formik.handleChange}
-                onBlur={formik.handleChange}
-                value={formik.values.instrctor}
+                onBlur={formik.handleBlur}
+                value={formik.values.instructor}
               />
+              {formik.touched.instructor && formik.errors.instructor ? (
+                <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
+                  <p className="font-bold">{formik.errors.instructor}</p>
+                </div>
+              ) : null}
             </div>
             <div className="mb-4">
               <label
@@ -136,9 +157,14 @@ const NewCourse = () => {
                 id="studentList"
                 placeholder="Select Student list"
                 onChange={formik.handleChange}
-                onBlur={formik.handleChange}
+                onBlur={formik.handleBlur}
                 value={formik.values.studentList}
               />
+              {formik.touched.studentList && formik.errors.studentList ? (
+                <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
+                  <p className="font-bold">{formik.errors.studentList}</p>
+                </div>
+              ) : null}
             </div>
             <input
               className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
