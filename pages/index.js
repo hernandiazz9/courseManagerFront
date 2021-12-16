@@ -20,10 +20,10 @@ const GET_COURSES = gql`
       instructor
     }
   }
-`
+`;
 
 const Courses = () => {
-  const { data, loading } = useQuery(GET_COURSES); 
+  const { data, loading } = useQuery(GET_COURSES);
   // console.log(data);
 
   return (
@@ -33,34 +33,34 @@ const Courses = () => {
       </h1>
 
       <Link href="/newcourse">
-        <a className="bg-blue-700 py-2 px-5 mt-2 inline-block text-white rounded text-sm uppercase hover:bg-gray-700 font-bold mb-10">
+        <a className="bg-blue-700 px-3 py-2 md:px-5 mt-6 inline-block text-white rounded text-sm uppercase hover:bg-gray-700 font-bold mb-4 md:mb-10">
           New Course
         </a>
       </Link>
-      <div className="bg-white shadow overflow-hidden sm:rounded-md">
-        <ul className="divide-y divide-gray-200">
+      <div className="bg-white mt-2 shadow overflow-hidden sm:rounded-md">
+        <ul className="divide-y divide-gray-300">
           {!loading &&
             data.getCourses.map((course) => (
               <li key={course.id}>
                 <div className="block py-2 hover:bg-gray-50 tracking-wider">
                   <div className="px-4 py-4 sm:px-6">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col md:flex-row items-center justify-between">
                       <div>
-                        <p className="text-xl font-bold uppercase  text-gray-700 truncate">
+                        <p className="text-md md:text-xl font-bold uppercase  text-gray-700 truncate">
                           {course.title}
                         </p>
                         <Date course={course} />
                         <Instructor course={course} />
                         <StudentList course={course} />
                       </div>
-                      <div className="ml-2  flex-shrink-0 flex flex-col">
-                        <Edit edit={course} url='editcourse'  />
+                      <div className="ml-2 sm:mt-4 pt-5 flex-shrink-0 flex flex-row md:flex-col">
+                        <Edit edit={course} url="editcourse" />
                         <Delete id={course.id} />
                       </div>
                     </div>
                   </div>
                 </div>
-              </li> 
+              </li>
             ))}
         </ul>
       </div>

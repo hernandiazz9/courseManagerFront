@@ -39,15 +39,13 @@ const EditCourse = () => {
     query: { pid },
   } = router;
 
-  console.log(pid);
-
   //get course by id
   const { data, loading } = useQuery(GET_COURSE, {
     variables: {
       getCourseId: pid,
     },
   });
-
+  
   //edit course
   const [editCourse] = useMutation(EDIT_COURSE);
   const editCourseById = async (values) => {
@@ -60,7 +58,7 @@ const EditCourse = () => {
       studentList,
     } = values;
     try {
-      const { data } = await editCourse({
+      await editCourse({
         variables: {
           editCourseId: pid,
           input: {
@@ -73,13 +71,8 @@ const EditCourse = () => {
           },
         },
       });
-      console.log(data, "data");
-      Swal.fire(
-         'Edited',
-         'Course was edited succesfully',
-         'success'
-      )
-      router.push('/')
+      Swal.fire("Edited", "Course  edited succesfully", "success");
+      router.push("/");
     } catch (error) {
       console.log(error);
     }
@@ -94,8 +87,6 @@ const EditCourse = () => {
     instructor: Yup.string().required("Instructor is Require"),
     studentList: Yup.string().required("Student List is Require"),
   });
-
-  console.log(data);
 
   return (
     <Layout>

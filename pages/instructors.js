@@ -3,10 +3,10 @@ import Layout from "../component/Layout";
 import { useQuery, gql } from "@apollo/client";
 import Link from "next/link";
 import Edit from "../component/courses/Edit";
-import Delete from "../component/courses/Delete";
+import Delete from "../component/instructors/Delete";
 import CoursesInstructor from "../component/instructors/CoursesInstructor";
 
-const GET_INSTRUCTOR = gql`
+const GET_INSTRUCTORS = gql`
   query GetInstructors {
     getInstructors {
       id
@@ -18,7 +18,7 @@ const GET_INSTRUCTOR = gql`
 `;
 
 const Instructors = () => {
-  const { data, loading } = useQuery(GET_INSTRUCTOR);
+  const { data, loading } = useQuery(GET_INSTRUCTORS);
 
   console.log(data);
 
@@ -36,7 +36,7 @@ const Instructors = () => {
         </Link>
 
         <div className="bg-white mt-2 shadow overflow-hidden sm:rounded-md">
-          <ul className="divide-y divide-gray-200">
+          <ul className="divide-y divide-gray-300">
             {!loading &&
               data.getInstructors.map((instructor) => (
                 <li key={instructor.id}>
@@ -58,7 +58,7 @@ const Instructors = () => {
                           </p>
                           <CoursesInstructor instructor={instructor} />
                         </div>
-                        <div className="ml-2 sm:mt-4  flex-shrink-0 flex flex-row md:flex-col">
+                        <div className=" divider-y ml-2 sm:mt-4 pt-5 flex-shrink-0 flex flex-row md:flex-col">
                           <Edit edit={instructor} url="editinstructor" />
                           <Delete id={instructor.id} />
                         </div>
