@@ -6,19 +6,19 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import Swal from "sweetalert2";
 
-const NEW_INSTRUCTOR = gql`
-  mutation NewInstructor($input: InstructorInput) {
-    newInstructor(input: $input) {
+const NEW_STUDENT = gql`
+  mutation NewStudent($input: StudentInput) {
+    newStudent(input: $input) {
       id
-      lastName
-      name
       email
+      name
+      lastName
     }
   }
 `;
-const GET_INSTRUCTOR = gql`
-  query GetInstructors {
-    getInstructors {
+const GET_STUDENTS = gql`
+  query GetStudents {
+    getStudents {
       id
       email
       name
@@ -27,16 +27,16 @@ const GET_INSTRUCTOR = gql`
   }
 `;
 
-const NewInstructor = () => {
-  useQuery(GET_INSTRUCTOR);
+const NewStudent = () => {
+  useQuery(GET_STUDENTS);
   const router = useRouter();
-  const [newInstructor] = useMutation(NEW_INSTRUCTOR, {
-    update(cache, { data: { newInstructor } }) {
-      const { getInstructors } = cache.readQuery({ query: GET_INSTRUCTOR });
+  const [newStudent] = useMutation(NEW_STUDENT, {
+    update(cache, { data: { newStudent } }) {
+      const { getStudents } = cache.readQuery({ query: GET_STUDENTS });
       cache.writeQuery({
-        query: GET_INSTRUCTOR,
+        query: GET_STUDENTS,
         data: {
-          getInstructors: [...getInstructors, newInstructor],
+          getStudents: [...getStudents, newStudent],
         },
       });
     },
@@ -57,7 +57,7 @@ const NewInstructor = () => {
       // console.log(valores);
       const { name, lastName, email } = valores;
       try {
-        await newInstructor({
+        await newStudent({
           variables: {
             input: {
               name,
@@ -68,7 +68,7 @@ const NewInstructor = () => {
         });
 
         Swal.fire("Added", "Instructor added succesfully", "success");
-        router.push("/instructors");
+        router.push("/students");
       } catch (error) {
         console.log(error, "Error");
       }
@@ -97,7 +97,7 @@ const NewInstructor = () => {
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
                 type="text"
                 id="name"
-                placeholder="Instructor Name.."
+                placeholder="Student Name.."
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.name}
@@ -119,7 +119,7 @@ const NewInstructor = () => {
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
                 type="text"
                 id="lastName"
-                placeholder="Instructor Last Name.."
+                placeholder="Student Last Name.."
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.lastName}
@@ -141,7 +141,7 @@ const NewInstructor = () => {
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
                 type="text"
                 id="email"
-                placeholder="Instructor Email.."
+                placeholder="Student Email.."
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.email}
@@ -156,7 +156,7 @@ const NewInstructor = () => {
             <input
               className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
               type="submit"
-              value="Add Instructor"
+              value="Add Student"
             />
           </form>
         </div>
@@ -165,4 +165,4 @@ const NewInstructor = () => {
   );
 };
 
-export default NewInstructor;
+export default NewStudent;

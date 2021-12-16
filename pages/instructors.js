@@ -20,7 +20,6 @@ const GET_INSTRUCTORS = gql`
 const Instructors = () => {
   const { data, loading } = useQuery(GET_INSTRUCTORS);
 
-  console.log(data);
 
   return (
     <div>

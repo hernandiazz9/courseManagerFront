@@ -6,9 +6,9 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import Swal from "sweetalert2";
 
-const GET_INSTRUCTOR = gql`
-  query GetInstructor($instructorID: ID!) {
-    getInstructor(id: $instructorID) {
+const GET_STUDENT_ID = gql`
+  query GetStudent($getStudentId: ID!) {
+    getStudent(id: $getStudentId) {
       id
       email
       name
@@ -16,38 +16,38 @@ const GET_INSTRUCTOR = gql`
     }
   }
 `;
-const EDIT_INSTRUCTOR = gql`
-  mutation EditInstructor($editInstructorId: ID!, $input: InstructorInput) {
-    editInstructor(id: $editInstructorId, input: $input) {
-      email
-      id
+const EDIT_STUDENT = gql`
+  mutation EditStudent($editStudentId: ID!, $input: StudentInput) {
+    editStudent(id: $editStudentId, input: $input) {
       name
       lastName
+      email
     }
   }
 `;
 
-const EditInstructor = () => {
+const EditStudent = () => {
   const router = useRouter();
   const {
     query: { pid },
   } = router;
 
-  //get instructor by id
-  const { data, loading } = useQuery(GET_INSTRUCTOR, {
+  //get student by id
+  const { data, loading } = useQuery(GET_STUDENT_ID, {
     variables: {
-      instructorID: pid,
+      getStudentId: pid,
     },
   });
+  console.log(data);
 
-  //edit instructor
-  const [editInstructor] = useMutation(EDIT_INSTRUCTOR);
-  const editCourseById = async (values) => {
+  //edit student
+  const [editStudent] = useMutation(EDIT_STUDENT);
+  const editStudentById = async (values) => {
     const { email, name, lastName } = values;
     try {
-      await editInstructor({
+      await editStudent({
         variables: {
-          editInstructorId: pid,
+          editStudentId: pid,
           input: {
             email,
             name,
@@ -55,8 +55,8 @@ const EditInstructor = () => {
           },
         },
       });
-      Swal.fire("Edited", "Instructor Edited succesufully", "success");
-      router.push("/instructors");
+      Swal.fire("Edited", "Student Edited succesfully", "success");
+      router.push("/students");
     } catch (error) {
       console.log(error);
     }
@@ -68,7 +68,7 @@ const EditInstructor = () => {
     lastName: Yup.string().required("Last Name is Require"),
     email: Yup.string().required("Email Time is Require"),
   });
-  // console.log(data);
+  console.log(data);
 
   return (
     <Layout>
@@ -80,9 +80,9 @@ const EditInstructor = () => {
           <Formik
             validationSchema={schemaValidation}
             enableReinitialize
-            initialValues={!loading && data.getInstructor}
+            initialValues={!loading && data.getStudent}
             onSubmit={(values) => {
-              editCourseById(values);
+              editStudentById(values);
             }}
           >
             {(props) => {
@@ -102,7 +102,7 @@ const EditInstructor = () => {
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
                       type="text"
                       id="name"
-                      placeholder="Instructor Name.."
+                      placeholder="Student Name.."
                       onChange={props.handleChange}
                       onBlur={props.handleBlur}
                       value={props.values.name}
@@ -124,7 +124,7 @@ const EditInstructor = () => {
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
                       type="text"
                       id="lastName"
-                      placeholder="Instructor Last Name.."
+                      placeholder="Student Last Name.."
                       onChange={props.handleChange}
                       onBlur={props.handleBlur}
                       value={props.values.lastName}
@@ -146,7 +146,7 @@ const EditInstructor = () => {
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
                       type="text"
                       id="email"
-                      placeholder="Instructor Email.."
+                      placeholder="Student Email.."
                       onChange={props.handleChange}
                       onBlur={props.handleBlur}
                       value={props.values.email}
@@ -161,7 +161,7 @@ const EditInstructor = () => {
                   <input
                     className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
                     type="submit"
-                    value="Edit Instructor"
+                    value="Edit Student"
                   />
                 </form>
               );
@@ -173,4 +173,4 @@ const EditInstructor = () => {
   );
 };
 
-export default EditInstructor;
+export default EditStudent;
