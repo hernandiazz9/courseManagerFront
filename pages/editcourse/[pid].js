@@ -4,12 +4,26 @@ import Layout from "../../component/Layout";
 import { useQuery, gql, useMutation } from "@apollo/client";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import Swal from "sweetalert2";
 
 const GET_COURSE = gql`
   query GetCourse($getCourseId: ID!) {
     getCourse(id: $getCourseId) {
       id
       title
+      startDate
+      startTime
+      courseLength
+      instructor
+      studentList
+    }
+  }
+`;
+const EDIT_COURSE = gql`
+  mutation EditCourse($editCourseId: ID!, $input: CourseInput) {
+    editCourse(id: $editCourseId, input: $input) {
+      title
+      id
       startDate
       startTime
       courseLength
@@ -27,11 +41,49 @@ const EditCourse = () => {
 
   console.log(pid);
 
+  //get course by id
   const { data, loading } = useQuery(GET_COURSE, {
     variables: {
       getCourseId: pid,
     },
   });
+
+  //edit course
+  const [editCourse] = useMutation(EDIT_COURSE);
+  const editCourseById = async (values) => {
+    const {
+      title,
+      startDate,
+      startTime,
+      courseLength,
+      instructor,
+      studentList,
+    } = values;
+    try {
+      const { data } = await editCourse({
+        variables: {
+          editCourseId: pid,
+          input: {
+            title,
+            startDate,
+            startTime,
+            courseLength,
+            instructor,
+            studentList,
+          },
+        },
+      });
+      console.log(data, "data");
+      Swal.fire(
+         'Edited',
+         'Course was edited succesfully',
+         'success'
+      )
+      router.push('/')
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   //validation
   const schemaValidation = Yup.object({
@@ -56,6 +108,9 @@ const EditCourse = () => {
             validationSchema={schemaValidation}
             enableReinitialize
             initialValues={!loading && data.getCourse}
+            onSubmit={(values) => {
+              editCourseById(values);
+            }}
           >
             {(props) => {
               return (
@@ -77,7 +132,7 @@ const EditCourse = () => {
                       placeholder="Corse Title.."
                       onChange={props.handleChange}
                       onBlur={props.handleBlur}
-                       value={props.values.title}
+                      value={props.values.title}
                     />
                     {props.touched.title && props.errors.title ? (
                       <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
@@ -98,7 +153,7 @@ const EditCourse = () => {
                       id="startDate"
                       onChange={props.handleChange}
                       onBlur={props.handleBlur}
-                       value={props.values.startDate}
+                      value={props.values.startDate}
                     />
                     {props.touched.startDate && props.errors.startDate ? (
                       <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
@@ -119,7 +174,7 @@ const EditCourse = () => {
                       id="startTime"
                       onChange={props.handleChange}
                       onBlur={props.handleBlur}
-                       value={props.values.startTime}
+                      value={props.values.startTime}
                     />
                     {props.touched.startTime && props.errors.startTime ? (
                       <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
@@ -141,7 +196,7 @@ const EditCourse = () => {
                       placeholder="ej: 1.5 hs"
                       onChange={props.handleChange}
                       onBlur={props.handleBlur}
-                       value={props.values.courseLength}
+                      value={props.values.courseLength}
                     />
                     {props.touched.courseLength && props.errors.courseLength ? (
                       <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
@@ -163,7 +218,7 @@ const EditCourse = () => {
                       placeholder="Select the Instructor"
                       onChange={props.handleChange}
                       onBlur={props.handleBlur}
-                       value={props.values.instructor}
+                      value={props.values.instructor}
                     />
                     {props.touched.instructor && props.errors.instructor ? (
                       <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
@@ -185,7 +240,7 @@ const EditCourse = () => {
                       placeholder="Select Student list"
                       onChange={props.handleChange}
                       onBlur={props.handleBlur}
-                       value={props.values.studentList}
+                      value={props.values.studentList}
                     />
                     {props.touched.studentList && props.errors.studentList ? (
                       <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">

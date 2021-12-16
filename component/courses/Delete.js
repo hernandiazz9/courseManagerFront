@@ -60,7 +60,7 @@ const Delete = ({ id }) => {
   };
   return (
     <button type="button" onClick={handleClick}>
-      <p className="px-2 text-center inline-flex text-xs leading-5 font-semibold uppercase rounded-full bg-green-100 text-green-800">
+      <p className="px-2 ml-2 text-center inline-flex text-xs leading-5 font-semibold uppercase rounded-full bg-red-100 text-green-800">
         delete
       </p>
     </button>

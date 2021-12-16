@@ -33,6 +33,7 @@ const GET_COURSES = gql`
 `;
 
 const NewCourse = () => {
+
   useQuery(GET_COURSES);
   const router = useRouter();
   const [newCourse] = useMutation(NEW_COURSE, {
@@ -87,7 +88,12 @@ const NewCourse = () => {
             },
           },
         });
-        console.log(data.newCourse, "/////");
+
+        Swal.fire(
+          'Created',
+          'Course created succesfully',
+          'success'
+       )
         router.push("/");
       } catch (error) {
         console.log(error, "Error");
@@ -112,7 +118,7 @@ const NewCourse = () => {
               >
                 Title
               </label>
-              <input
+              <input 
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
                 type="text"
                 id="title"

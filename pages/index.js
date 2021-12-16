@@ -20,7 +20,7 @@ const GET_COURSES = gql`
       instructor
     }
   }
-`;
+`
 
 const Courses = () => {
   const { data, loading } = useQuery(GET_COURSES); 
@@ -46,7 +46,7 @@ const Courses = () => {
                   <div className="px-4 py-4 sm:px-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-xl font-bold  text-gray-700 truncate">
+                        <p className="text-xl font-bold uppercase  text-gray-700 truncate">
                           {course.title}
                         </p>
                         <Date course={course} />
@@ -54,13 +54,13 @@ const Courses = () => {
                         <StudentList course={course} />
                       </div>
                       <div className="ml-2  flex-shrink-0 flex flex-col">
-                        <Edit course={course}  />
+                        <Edit edit={course} url='editcourse'  />
                         <Delete id={course.id} />
                       </div>
                     </div>
                   </div>
                 </div>
-              </li>
+              </li> 
             ))}
         </ul>
       </div>

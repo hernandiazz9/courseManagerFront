@@ -1,11 +1,11 @@
 import React from "react";
 import Router from "next/router";
 
-const Edit = ({ course }) => {
-  const { id } = course;
+const Edit = ({ edit, url }) => {
+  const { id } = edit;
   const handleClick = () =>{
     Router.push({
-      pathname: "/editcourse/[id]",
+      pathname: `/${url}/[id]`,
       query: { id }
     })
   }
