@@ -32,6 +32,11 @@ const Students = () => {
             Add Students
           </a>
         </Link>
+        <Link href="/studentlist">
+          <a className="bg-blue-700 ml-3 px-3 py-2 md:px-5 mt-6 inline-block text-white rounded text-sm uppercase hover:bg-gray-700 font-bold mb-4 md:mb-10">
+            Student List
+          </a>
+        </Link>
 
         <div className="bg-white mt-2 shadow overflow-hidden sm:rounded-md">
           <ul className="divide-y divide-gray-300">
