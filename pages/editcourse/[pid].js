@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../component/Layout";
 import { useQuery, gql, useMutation } from "@apollo/client";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Swal from "sweetalert2";
+import Instructors from "../../component/newCourses/Instructors";
+import StudentList from "../../component/newCourses/StudentList";
 
 const GET_COURSE = gql`
   query GetCourse($getCourseId: ID!) {
@@ -14,26 +16,56 @@ const GET_COURSE = gql`
       startDate
       startTime
       courseLength
-      instructor
-      studentList
+      instructor {
+        id
+        name
+        email
+        lastName
+      }
+      studentList {
+        id
+        listName
+        students {
+          id
+          name
+          lastName
+          email
+        }
+      }
     }
   }
 `;
 const EDIT_COURSE = gql`
   mutation EditCourse($editCourseId: ID!, $input: CourseInput) {
     editCourse(id: $editCourseId, input: $input) {
-      title
       id
+      title
       startDate
       startTime
       courseLength
-      instructor
-      studentList
+      instructor {
+        id
+        name
+        email
+        lastName
+      }
+      studentList {
+        id
+        listName
+        students {
+          id
+          name
+          lastName
+          email
+        }
+      }
     }
   }
 `;
 
 const EditCourse = () => {
+  const [instructor, setInstructor] = useState();
+  const [studentList, setStudentList] = useState();
   const router = useRouter();
   const {
     query: { pid },
@@ -45,18 +77,11 @@ const EditCourse = () => {
       getCourseId: pid,
     },
   });
-  
+
   //edit course
   const [editCourse] = useMutation(EDIT_COURSE);
   const editCourseById = async (values) => {
-    const {
-      title,
-      startDate,
-      startTime,
-      courseLength,
-      instructor,
-      studentList,
-    } = values;
+    const { title, startDate, startTime, courseLength, studentList } = values;
     try {
       await editCourse({
         variables: {
@@ -68,6 +93,7 @@ const EditCourse = () => {
             courseLength,
             instructor,
             studentList,
+            //agregar instructor ys tdent id............
           },
         },
       });
@@ -84,8 +110,6 @@ const EditCourse = () => {
     startDate: Yup.date().required("Date is Require"),
     startTime: Yup.string().required("Start Time is Require"),
     courseLength: Yup.string().required("Course Lengthis Require"),
-    instructor: Yup.string().required("Instructor is Require"),
-    studentList: Yup.string().required("Student List is Require"),
   });
 
   return (
@@ -195,50 +219,14 @@ const EditCourse = () => {
                       </div>
                     ) : null}
                   </div>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="instructor"
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                    >
-                      Instructor
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                      type="select" //averiguar el select
-                      id="instructor"
-                      placeholder="Select the Instructor"
-                      onChange={props.handleChange}
-                      onBlur={props.handleBlur}
-                      value={props.values.instructor}
-                    />
-                    {props.touched.instructor && props.errors.instructor ? (
-                      <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
-                        <p className="font-bold">{props.errors.instructor}</p>
-                      </div>
-                    ) : null}
-                  </div>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="studentList"
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                    >
-                      Start Time
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                      type="select"
-                      id="studentList"
-                      placeholder="Select Student list"
-                      onChange={props.handleChange}
-                      onBlur={props.handleBlur}
-                      value={props.values.studentList}
-                    />
-                    {props.touched.studentList && props.errors.studentList ? (
-                      <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
-                        <p className="font-bold">{props.errors.studentList}</p>
-                      </div>
-                    ) : null}
-                  </div>
+                  <Instructors
+                    instructor={!loading && data.getCourse.instructor}
+                    setInstructor={setInstructor}
+                  />
+                  <StudentList
+                    studentList={!loading && data.getCourse.studentList}
+                    setStudentList={setStudentList}
+                  />
                   <input
                     className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
                     type="submit"

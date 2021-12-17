@@ -34,7 +34,6 @@ const NEW_STUDENT_LIST = gql`
 
 const NewStudentList = () => {
   const [students, setStudents] = useState([]);
-  const [stdentId, setStdentId] = useState([]);
   const [listName, setListName] = useState("");
   const { data, loading } = useQuery(GET_STUDENTS);
 

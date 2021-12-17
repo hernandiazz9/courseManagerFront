@@ -13,8 +13,7 @@ const Students = ({ course }) => {
           <span className=" text-sm font-light text-gray-500">
             Student List:{" "}
           </span>
-          {/* {course.instructor} */}
-          React 1 list
+          {course.studentList.listName}
         </span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -33,10 +32,9 @@ const Students = ({ course }) => {
       </button>
       <Collapse  isOpened={open} initialStyle={{height: 0, transition:'height .5s '}}>
         <ul style={{height:'100'}} className='pl-5'>
-          <li>hernan perto</li>
-          <li>juan pablo</li>
-          <li>pamela chu</li>
-          <li>lisandro markez</li>
+          {course.studentList.students.map(student=>(
+            <li className='font-light divide-y divide-dashed' key={student.id}> - {student.name}{' '}{student.lastName}</li>
+          ))}
         </ul>
       </Collapse>
       <style jsx>{`

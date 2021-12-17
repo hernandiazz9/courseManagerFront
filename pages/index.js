@@ -14,17 +14,31 @@ const GET_COURSES = gql`
       id
       title
       startDate
-      studentList
       startTime
       courseLength
-      instructor
+      instructor {
+        id
+        name
+        lastName
+        email
+      }
+      studentList {
+        id
+        listName
+        students {
+          id
+          name
+          lastName
+          email
+        }
+      }
     }
   }
 `;
 
 const Courses = () => {
   const { data, loading } = useQuery(GET_COURSES);
-  // console.log(data);
+  console.log(data);
 
   return (
     <Layout>

@@ -5,8 +5,8 @@ const Instructor = ({course}) => {
     <div>
       <p className=" text-md font-bold text-gray-600">
         <span className=" text-sm font-light text-gray-500">Instructor: </span>
-        {/* {course.instructor} */}
-        Juan Pablo de la torres
+        {course.instructor.name}{" "}{course.instructor.lastName}
+
       </p>
     </div>
   );
