@@ -32,17 +32,12 @@ const GET_COURSE_BY_INSTRUCTOR = gql`
 `;
 const CoursesInstructor = ({ instructor }) => {
   const [open, setOpen] = useState(false);
-  const { data, loading } = useQuery(GET_COURSE_BY_INSTRUCTOR, {
+  const { data, loading, refetch } = useQuery(GET_COURSE_BY_INSTRUCTOR, {
     variables: {
       getCourseByInstructorId: instructor.id,
     },
   });
-  console.log(
-    !loading &&
-      data.getCourseByInstructor.length > 0 &&
-      data.getCourseByInstructor
-  );
-
+  refetch();
   return (
     <div className=" text-md font-bold text-gray-600">
       <button
@@ -80,7 +75,7 @@ const CoursesInstructor = ({ instructor }) => {
         >
           {!loading &&
             data.getCourseByInstructor.map((course) => (
-              <li key={course.id}>{ <Course course={course} /> }</li>
+              <li key={course.id}>{<Course course={course} />}</li>
             ))}
         </ul>
       </Collapse>
