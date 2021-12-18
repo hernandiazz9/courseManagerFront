@@ -8,7 +8,12 @@ const GET_STUDENT_LIST = gql`
     getStudentlists {
       id
       listName
-      students
+      students {
+        id
+        name
+        lastName
+        email
+      }
     }
   }
 `;
@@ -27,46 +32,54 @@ const NEW_STUDENT_LIST = gql`
     newStudentList(input: $input) {
       id
       listName
-      students
+      id
+      students {
+        name
+        lastName
+        email
+        id
+      }
     }
   }
 `;
 
 const NewStudentList = () => {
   const [students, setStudents] = useState([]);
+  const [selectedStudent, setSelectedStudent] = useState([]);
   const [listName, setListName] = useState("");
-  const { data, loading } = useQuery(GET_STUDENTS);
 
+  const { data, loading } = useQuery(GET_STUDENTS);
+  if (!loading && students.length === 0) setStudents(data.getStudents);
   const [newStudentList] = useMutation(NEW_STUDENT_LIST, {
     update(cache, { data: { newStudentList } }) {
-      const { getStudentsList } = cache.readQuery({ query: GET_STUDENT_LIST });
+      const { getStudentlists } = cache.readQuery({ query: GET_STUDENT_LIST });
       cache.writeQuery({
         query: GET_STUDENT_LIST,
         data: {
-          getStudentsList: [...getStudentsList, newStudentList],
+          getStudentlists: [...getStudentlists, newStudentList],
         },
       });
     },
   });
 
   const selectStudent = (student) => {
-    console.log(student, "s");
-    setStudents(student);
+    setSelectedStudent(student);
   };
-  useEffect(() => {}, [students]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const ids = students.map((e) => e.id);
     try {
       await newStudentList({
         variables: {
           input: {
             listName,
-            students: ids,
+            students: selectedStudent.map(st=>st.id),
           },
         },
       });
-      // Swal.fire("Added", "List Created succesfully", "success");
+      Swal.fire("Added", "List Created succesfully", "success");
+      setSelectedStudent([]);
+      setListName("");
     } catch (error) {
       console.log(error, "Error");
     }
@@ -103,7 +116,8 @@ const NewStudentList = () => {
         <Select
           id="long-value-select"
           instanceId="long-value-select"
-          options={!loading && data.getStudents}
+          value={selectedStudent}
+          options={students.length > 0 && students}
           isMulti={true}
           onChange={(student) => selectStudent(student)}
           getOptionValue={(student) => student.id}

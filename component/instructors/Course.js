@@ -5,6 +5,7 @@ import Date from "../courses/Date";
 import Students from "../courses/StudentList";
 
 const Course = ({ course }) => {
+  console.log(course);
   return (
     <div className="block py-2 hover:bg-gray-50 tracking-wide">
       <div className="px-1 py-1 sm:px-6">
@@ -17,7 +18,7 @@ const Course = ({ course }) => {
               {course.title}
             </p>
             <Date course={course}/>
-            <Students />
+            <Students course={course} />
           </div>
           <div className="ml-2  flex-shrink-0 flex flex-row md:flex-col">
           <Edit edit={course} url='editcourse'  />

@@ -104,8 +104,8 @@ const NewCourse = () => {
               startDate,
               startTime,
               courseLength,
-              instructor: "61baf4303ae289bd4acaa43d",
-              studentList: "61bb9baa539a212b47aeeb50",
+              instructor: instructor.id,
+              studentList: studentList.id,
             },
           },
         });

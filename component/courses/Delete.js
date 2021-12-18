@@ -1,6 +1,7 @@
 import React from "react";
 import { useQuery, useMutation, gql } from "@apollo/client";
 import Swal from "sweetalert2";
+import {useRouter} from "next/router";
 
 const DELETE_COURSE = gql`
   mutation DeleteCourse($deleteCourseId: ID!) {
@@ -21,6 +22,7 @@ const GET_COURSES = gql`
   }
 `;
 const Delete = ({ id }) => {
+  const router = useRouter()
   const [deleteCourse] = useMutation(DELETE_COURSE, {
     update(cache) {
       const { getCourses } = cache.readQuery({ query: GET_COURSES });
@@ -52,6 +54,7 @@ const Delete = ({ id }) => {
           });
           console.log(data.deleteCourse);
           Swal.fire("Deleted!", data.deleteCourse, "success");
+          router.push('/')
         } catch (error) {
           console.log(error);
         }

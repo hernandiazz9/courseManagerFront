@@ -17,7 +17,7 @@ const GET_STUDENTLIST = gql`
   }
 `;
 
-const StudentList = ({ setStudentList, studentList }) => {
+const StudentList = ({ setStudentList, prevStudentList }) => {
   const { data, loading } = useQuery(GET_STUDENTLIST);
 
   return (
@@ -29,7 +29,7 @@ const StudentList = ({ setStudentList, studentList }) => {
         Start Time
       </label>
       <Select
-        value={studentList}
+        value={prevStudentList}
         id="long-value-select"
         instanceId="long-value-select"
         options={!loading && data.getStudentlists}

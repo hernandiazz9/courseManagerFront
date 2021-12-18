@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../component/Layout";
 import { useQuery, gql, useMutation } from "@apollo/client";
@@ -64,24 +64,40 @@ const EDIT_COURSE = gql`
 `;
 
 const EditCourse = () => {
-  const [instructor, setInstructor] = useState();
-  const [studentList, setStudentList] = useState();
+  const [instructor, setInstructor] = useState({});
+  const [studentList, setStudentList] = useState({});
+  const [prevInstructor, setPrevInstrutcor] = useState({});
+  const [prevStudentList, setPrevStudentList] = useState({});
+
+  // console.log( instructor, studentList);
+
   const router = useRouter();
   const {
     query: { pid },
   } = router;
-
+  console.log(pid);
   //get course by id
   const { data, loading } = useQuery(GET_COURSE, {
     variables: {
       getCourseId: pid,
     },
   });
+  if (!loading && Object.keys(prevInstructor).length === 0)
+    setPrevInstrutcor(data.getCourse.instructor);
+  if (!loading && Object.keys(prevStudentList).length === 0)
+    setPrevStudentList(data.getCourse.studentList);
+
+  useEffect(() => {
+    setPrevInstrutcor(instructor);
+  }, [instructor]);
+  useEffect(() => {
+    setPrevStudentList(studentList);
+  }, [studentList]);
 
   //edit course
   const [editCourse] = useMutation(EDIT_COURSE);
   const editCourseById = async (values) => {
-    const { title, startDate, startTime, courseLength, studentList } = values;
+    const { title, startDate, startTime, courseLength } = values;
     try {
       await editCourse({
         variables: {
@@ -91,8 +107,8 @@ const EditCourse = () => {
             startDate,
             startTime,
             courseLength,
-            instructor,
-            studentList,
+            instructor: prevInstructor.id,
+            studentList: prevStudentList.id,
             //agregar instructor ys tdent id............
           },
         },
@@ -111,7 +127,7 @@ const EditCourse = () => {
     startTime: Yup.string().required("Start Time is Require"),
     courseLength: Yup.string().required("Course Lengthis Require"),
   });
-
+  // if (loading) return "cargando..";
   return (
     <Layout>
       <h1 className="text-4xl my-6  text-center hidden md:block leading-6 font-medium text-black">
@@ -122,7 +138,7 @@ const EditCourse = () => {
           <Formik
             validationSchema={schemaValidation}
             enableReinitialize
-            initialValues={!loading && data.getCourse}
+            initialValues={!loading ? data.getCourse : ""}
             onSubmit={(values) => {
               editCourseById(values);
             }}
@@ -202,7 +218,7 @@ const EditCourse = () => {
                       htmlFor="courseLength"
                       className="block text-gray-700 text-sm font-bold mb-2"
                     >
-                      Start Time
+                      Course legth
                     </label>
                     <input
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
@@ -220,11 +236,11 @@ const EditCourse = () => {
                     ) : null}
                   </div>
                   <Instructors
-                    instructor={!loading && data.getCourse.instructor}
+                    prevInstructor={prevInstructor}
                     setInstructor={setInstructor}
                   />
                   <StudentList
-                    studentList={!loading && data.getCourse.studentList}
+                    prevStudentList={prevStudentList}
                     setStudentList={setStudentList}
                   />
                   <input

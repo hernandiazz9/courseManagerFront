@@ -3,7 +3,7 @@ import Layout from "../component/Layout";
 import ExistinStudentList from "../component/studentList/ExistinStudentList";
 import NewStudentList from "../component/studentList/NewStudentList";
 
-const newstudentlist = () => {
+const Newstudentlist = () => {
   return (
     <Layout>
       <h1 className="text-4xl my-6  text-center hidden md:block leading-6 font-medium text-black">
@@ -26,4 +26,4 @@ const newstudentlist = () => {
   );
 };
 
-export default newstudentlist;
+export default Newstudentlist;

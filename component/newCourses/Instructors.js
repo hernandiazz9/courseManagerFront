@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery, gql } from "@apollo/client";
 import Select from "react-select";
 
@@ -13,9 +13,10 @@ const GET_INSTRUCTORS = gql`
   }
 `;
 
-const Instructors = ({ setInstructor, instructor }) => {
+const Instructors = ({ setInstructor, prevInstructor }) => {
   const { data, loading } = useQuery(GET_INSTRUCTORS);
 
+  // console.log(instructor, "////instr");
   return (
     <div className="mb-4">
       <label
@@ -28,7 +29,7 @@ const Instructors = ({ setInstructor, instructor }) => {
         id="long-value-select"
         instanceId="long-value-select"
         options={!loading && data.getInstructors}
-        value={instructor}
+        value={prevInstructor}
         onChange={(instructor) => setInstructor(instructor)}
         getOptionValue={(instructor) => instructor.id}
         getOptionLabel={(instructor) =>

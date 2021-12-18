@@ -11,6 +11,22 @@ const GET_COURSE_BY_INSTRUCTOR = gql`
       startDate
       startTime
       courseLength
+      instructor {
+        id
+        name
+        lastName
+        email
+      }
+      studentList {
+        id
+        listName
+        students {
+          id
+          name
+          lastName
+          email
+        }
+      }
     }
   }
 `;
@@ -21,7 +37,11 @@ const CoursesInstructor = ({ instructor }) => {
       getCourseByInstructorId: instructor.id,
     },
   });
-  console.log(data);
+  console.log(
+    !loading &&
+      data.getCourseByInstructor.length > 0 &&
+      data.getCourseByInstructor
+  );
 
   return (
     <div className=" text-md font-bold text-gray-600">
@@ -60,9 +80,7 @@ const CoursesInstructor = ({ instructor }) => {
         >
           {!loading &&
             data.getCourseByInstructor.map((course) => (
-              <li key={course.id}>
-                <Course course={course} />
-              </li>
+              <li key={course.id}>{ <Course course={course} /> }</li>
             ))}
         </ul>
       </Collapse>
