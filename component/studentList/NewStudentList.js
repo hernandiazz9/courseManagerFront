@@ -43,10 +43,15 @@ const NEW_STUDENT_LIST = gql`
   }
 `;
 
-const NewStudentList = () => {
+const NewStudentList = ({
+  setSelectedStudent,
+  selectedStudent,
+  listName,
+  setListName,
+  handleEdit,
+  isEditing,
+}) => {
   const [students, setStudents] = useState([]);
-  const [selectedStudent, setSelectedStudent] = useState([]);
-  const [listName, setListName] = useState("");
 
   const { data, loading } = useQuery(GET_STUDENTS);
   if (!loading && students.length === 0) setStudents(data.getStudents);
@@ -73,7 +78,7 @@ const NewStudentList = () => {
         variables: {
           input: {
             listName,
-            students: selectedStudent.map(st=>st.id),
+            students: selectedStudent.map((st) => st.id),
           },
         },
       });
@@ -88,12 +93,12 @@ const NewStudentList = () => {
   return (
     <div>
       <h1 className="text-2xl text-center  leading-5 font-medium text-black">
-        New Student List
+        {isEditing?"Edit Student List":"New Student List"}
       </h1>
 
       <form
         className="bg-white shadow-md px-8 pt-6 pb-8 mb-4"
-        onSubmit={handleSubmit}
+        onSubmit={isEditing ? handleEdit : handleSubmit}
       >
         <div className="mb-4">
           <label
@@ -128,7 +133,7 @@ const NewStudentList = () => {
         <input
           className="bg-gray-700 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
           type="submit"
-          value="Create List"
+          value={isEditing ? "Edit List" : "Create List"}
         />
       </form>
     </div>
