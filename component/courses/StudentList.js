@@ -3,7 +3,8 @@ import { Collapse } from "react-collapse";
 
 const Students = ({ course }) => {
   const [open, setOpen] = useState(false);
-  return (
+
+  return Object.keys(course).length > 0 ? (
     <div className=" text-md font-bold text-gray-600">
       <button
         onClick={() => setOpen((open) => !open)}
@@ -13,7 +14,7 @@ const Students = ({ course }) => {
           <span className=" text-sm font-light text-gray-500">
             Student List:{" "}
           </span>
-          {course.studentList.listName}
+          {course.studentList && course.studentList.listName}
         </span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -30,20 +31,31 @@ const Students = ({ course }) => {
           />
         </svg>
       </button>
-      <Collapse  isOpened={open} initialStyle={{height: 0, transition:'height .5s '}}>
-        <ul style={{height:'100'}} className='pl-5'>
-          {course.studentList.students.map(student=>(
-            <li className='font-light divide-y divide-dashed' key={student.id}> - {student.name}{' '}{student.lastName}</li>
-          ))}
+      <Collapse
+        isOpened={open}
+        initialStyle={{ height: 0, transition: "height .5s " }}
+      >
+        <ul style={{ height: "100" }} className="pl-5">
+          {course.studentList &&
+            course.studentList.students.map((student) => (
+              <li
+                className="font-light divide-y divide-dashed"
+                key={student.id}
+              >
+                {" "}
+                - {student.name} {student.lastName}
+              </li>
+            ))}
         </ul>
       </Collapse>
       <style jsx>{`
         .ReactCollapse--collapse {
           color: blue;
         }
-        
       `}</style>
     </div>
+  ) : (
+    "loading..."
   );
 };
 

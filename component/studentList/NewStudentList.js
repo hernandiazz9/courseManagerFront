@@ -131,7 +131,7 @@ const NewStudentList = ({
           noOptionsMessage={() => "No Student"}
         />
         <input
-          className="bg-gray-700 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
+          className="bg-gray-700 cursor-pointer w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
           type="submit"
           value={isEditing ? "Edit List" : "Create List"}
         />

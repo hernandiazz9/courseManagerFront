@@ -3,6 +3,7 @@ import Layout from "../component/Layout";
 import ExistinStudentList from "../component/studentList/ExistinStudentList";
 import NewStudentList from "../component/studentList/NewStudentList";
 import { useMutation, gql } from "@apollo/client";
+import Swal from "sweetalert2";
 
 const EDIT_STUDENT_LIST = gql`
   mutation EditStudentList($editStudentListId: ID!, $input: StudentListInput) {
@@ -20,15 +21,13 @@ const EDIT_STUDENT_LIST = gql`
 `;
 
 const Newstudentlist = () => {
-  // const [students, setStudents] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState([]);
   const [listName, setListName] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [selectedList, setSelectedList] = useState({
     id: "",
-    listName: "",
-    students: [],
   });
+
   const handleClick = (list) => {
     setSelectedStudent(list.students);
     setListName(list.listName);
@@ -43,14 +42,19 @@ const Newstudentlist = () => {
       await editStudentList({
         variables: {
           editStudentListId: selectedList.id,
-          listName: selectedList.listName,
-          students: selectedList.students,
+          input: {
+            listName,
+            students: selectedStudent.map((st) => st.id),
+          },
         },
       });
     } catch (error) {
       console.log(error);
     }
-    console.log("editing");
+    Swal.fire("Edited", "List Edited succesfully", "success");
+    setSelectedStudent([]);
+    setListName("");
+    setIsEditing(false)
   };
   return (
     <Layout>

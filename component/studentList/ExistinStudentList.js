@@ -19,19 +19,21 @@ const GET_STUDENT_LIST = gql`
 `;
 
 const ExistinStudentList = ({ handleClick }) => {
-  const { data, loading } = useQuery(GET_STUDENT_LIST);
+  const { data, loading, refetch } = useQuery(GET_STUDENT_LIST);
+  refetch()
   //   console.log(data);
 
   return (
     <>
       <div className="bg-white mt-2 shadow overflow-hidden sm:rounded-md">
         <div className="divide-y divide-gray-300 p-5  py-2  tracking-wider">
-          {!loading &&
+          {!loading ? 
             data.getStudentlists.map((list) => (
               <div
                 className="block py-2 hover:bg-gray-50 tracking-wider hover:bg-gray-50"
                 key={list.id}
               >
+
                 <div className="flex flex-col md:flex-row  justify-between">
                   <div>
                     <p className="text-md md:text-xl font-bold uppercase  text-gray-800 truncate">
@@ -65,7 +67,7 @@ const ExistinStudentList = ({ handleClick }) => {
                   </div>
                 </div>
               </div>
-            ))}
+            )):'Loading'}
         </div>
       </div>
     </>

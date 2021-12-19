@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import Instructors from "../component/newCourses/Instructors";
 import StudentList from "../component/newCourses/StudentList";
 import Swal from "sweetalert2";
+import SelectDate from "../component/newCourses/SelectDate";
 
 const NEW_COURSE = gql`
   mutation NewCourse($input: CourseInput) {
@@ -63,11 +64,11 @@ const GET_COURSES = gql`
   }
 `;
 
+
 const NewCourse = () => {
   useQuery(GET_COURSES);
   const [instructor, setInstructor] = useState({});
   const [studentList, setStudentList] = useState({});
-  console.log(instructor.id, studentList.id);
   const router = useRouter();
   const [newCourse] = useMutation(NEW_COURSE, {
     update(cache, { data: { newCourse } }) {
@@ -97,7 +98,7 @@ const NewCourse = () => {
     onSubmit: async (valores) => {
       const { title, startDate, startTime, courseLength } = valores;
       try {
-        const { data } = await newCourse({
+        await newCourse({
           variables: {
             input: {
               title,
@@ -109,7 +110,7 @@ const NewCourse = () => {
             },
           },
         });
-        console.log(data, "data");
+
         Swal.fire("Created", "Course created succesfully", "success");
         router.push("/");
       } catch (error) {
@@ -150,27 +151,7 @@ const NewCourse = () => {
                 </div>
               ) : null}
             </div>
-            <div className="mb-4">
-              <label
-                htmlFor="startDate"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Start Date
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                type="date"
-                id="startDate"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.startDate}
-              />
-              {formik.touched.startDate && formik.errors.startDate ? (
-                <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
-                  <p className="font-bold">{formik.errors.startDate}</p>
-                </div>
-              ) : null}
-            </div>
+            <SelectDate formik={formik} />
             <div className="mb-4">
               <label
                 htmlFor="startTime"
