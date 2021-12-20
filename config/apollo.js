@@ -5,7 +5,7 @@ const client = new ApolloClient({
    connectToDevTools:true,
    cache : new InMemoryCache(),
    link: new HttpLink({
-      uri: process.env.PORT || 'http://localhost:4000/',
+      uri: 'https://coursesmanagerserver.herokuapp.com/',
       fetch
    })
 
