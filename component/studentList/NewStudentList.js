@@ -42,7 +42,7 @@ const NEW_STUDENT_LIST = gql`
     }
   }
 `;
-
+ 
 const NewStudentList = ({
   setSelectedStudent,
   selectedStudent,
@@ -51,10 +51,11 @@ const NewStudentList = ({
   handleEdit,
   isEditing,
 }) => {
-  const [students, setStudents] = useState([]);
+  const [students, setStudents] = useState(null);
 
   const { data, loading } = useQuery(GET_STUDENTS);
-  if (!loading && students.length === 0) setStudents(data.getStudents);
+
+  if (!loading && !students ) setStudents(data.getStudents);
   const [newStudentList] = useMutation(NEW_STUDENT_LIST, {
     update(cache, { data: { newStudentList } }) {
       const { getStudentlists } = cache.readQuery({ query: GET_STUDENT_LIST });
@@ -90,7 +91,7 @@ const NewStudentList = ({
     }
   };
 
-  return (
+  return !loading? (
     <div>
       <h1 className="text-2xl text-center  leading-5 font-medium text-black">
         {isEditing?"Edit Student List":"New Student List"}
@@ -114,7 +115,6 @@ const NewStudentList = ({
             value={listName}
             placeholder="List Name"
             id="listName"
-            placeholder="Student Name.."
             required
           />
         </div>
@@ -122,7 +122,7 @@ const NewStudentList = ({
           id="long-value-select"
           instanceId="long-value-select"
           value={selectedStudent}
-          options={students.length > 0 && students}
+          options={students}
           isMulti={true}
           onChange={(student) => selectStudent(student)}
           getOptionValue={(student) => student.id}
@@ -137,7 +137,7 @@ const NewStudentList = ({
         />
       </form>
     </div>
-  );
+  ):<p>Loading . . .</p>
 };
 
 export default NewStudentList;

@@ -54,7 +54,6 @@ const ExistinStudentList = ({ handleClick }) => {
                   </ul>
                 </div>
                 <div className="ml-2 sm:mt-4 pt-5 flex-shrink-0 flex flex-row md:flex-col">
-                  {/* <Edit edit={list} url="editstudentlist" /> */}
                   <button type="button" onClick={() => handleClick(list)}>
                     <p className="px-4 text-center inline-flex text-xs leading-5 font-semibold uppercase rounded-full bg-green-100 text-green-800">
                       edit
