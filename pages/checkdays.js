@@ -57,15 +57,17 @@ const CheckDays = () => {
               type="date"
               onChange={(e) => setDateSelect(e.target.value)}
               value={dateSelect}
-              placeholder="List Name"
               id="listName"
-              placeholder="Student Name.."
               required
             />
           </div>
         </form>
 
-        {!loading ? <CourseByDate courses={data.getCourseByDate} />:<p className='text-center'>Loading . . . </p>}
+        {!loading ? (
+          <CourseByDate courses={data.getCourseByDate} />
+        ) : (
+          <p className="text-center">Loading . . . </p>
+        )}
       </div>
     </Layout>
   );
