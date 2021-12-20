@@ -5,7 +5,7 @@ const client = new ApolloClient({
    connectToDevTools:true,
    cache : new InMemoryCache(),
    link: new HttpLink({
-      uri: process.env.PORT,
+      uri: process.env.PORT_URL,
       fetch
    })
 
