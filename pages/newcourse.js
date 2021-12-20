@@ -8,6 +8,8 @@ import Instructors from "../component/newCourses/Instructors";
 import StudentList from "../component/newCourses/StudentList";
 import Swal from "sweetalert2";
 import SelectDate from "../component/newCourses/SelectDate";
+import Duration from "../component/newCourses/Duration";
+import { format, addMinutes, addHours } from "date-fns";
 
 const NEW_COURSE = gql`
   mutation NewCourse($input: CourseInput) {
@@ -15,7 +17,6 @@ const NEW_COURSE = gql`
       id
       title
       startDate
-      startTime
       courseLength
       instructor {
         id
@@ -42,7 +43,6 @@ const GET_COURSES = gql`
       id
       title
       startDate
-      startTime
       courseLength
       instructor {
         id
@@ -64,9 +64,9 @@ const GET_COURSES = gql`
   }
 `;
 
-
 const NewCourse = () => {
-  useQuery(GET_COURSES);
+  const { data, loading, error } = useQuery(GET_COURSES);
+  const [errorMsg, setErrorMsg] = useState(null)
   const [instructor, setInstructor] = useState({});
   const [studentList, setStudentList] = useState({});
   const router = useRouter();
@@ -81,36 +81,65 @@ const NewCourse = () => {
       });
     },
   });
+  // console.log(data);
+  // if (!loading) {
+  //   const verify = data.getCourses.map((course) => {
+  //     const dateStart = new Date(Number(course.startDate));
+  //     const hsMin = course.courseLength.split(":");
+  //     const addHs = addHours(dateStart, Number(hsMin[0]));
+  //     const dateFinish = addMinutes(addHs, Number(hsMin[1]));
+
+  //     console.log(dateStart.getTime(), "/", dateFinish.getTime());
+
+  //   });
+  // }
 
   const formik = useFormik({
     initialValues: {
       title: "",
       startDate: "",
-      startTime: "",
-      courseLength: "",
+      courseHs: 0,
+      courseMin: 0,
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Title is Require"),
       startDate: Yup.date().required("Date is Require"),
-      startTime: Yup.string().required("Start Time is Require"),
-      courseLength: Yup.string().required("Course Lengthis Require"),
+      courseHs: Yup.number("Must be a number").required("Course hs is Require"),
+      courseMin: Yup.number("Must be a number").required(
+        "Course min is Require"
+      ),
     }),
+
     onSubmit: async (valores) => {
-      const { title, startDate, startTime, courseLength } = valores;
+      const { title, startDate, courseHs, courseMin } = valores;
+      const dateSelect = new Date(startDate);
+
+      const verifyDisponibility = data.getCourses.filter((course) => {
+        const dateStart = new Date(Number(course.startDate));
+        const hsMin = course.courseLength.split(":");
+        const addHs = addHours(dateStart, Number(hsMin[0]));
+        const dateFinish = addMinutes(addHs, Number(hsMin[1]));
+        return (
+          dateSelect.getTime() > course.startDate &&
+          dateSelect.getTime() < dateFinish.getTime()
+        );
+      });
+      const sameInstructor = verifyDisponibility.map((course) => {
+        return course.instructor.id === instructor.id;
+      });
+      if(sameInstructor.length >0)return setErrorMsg('Instructor is already in other curse in the same time')
       try {
         await newCourse({
           variables: {
             input: {
               title,
               startDate,
-              startTime,
-              courseLength,
+              courseLength: courseHs + ":" + courseMin,
               instructor: instructor.id,
               studentList: studentList.id,
             },
           },
         });
-
         Swal.fire("Created", "Course created succesfully", "success");
         router.push("/");
       } catch (error) {
@@ -152,50 +181,7 @@ const NewCourse = () => {
               ) : null}
             </div>
             <SelectDate formik={formik} />
-            <div className="mb-4">
-              <label
-                htmlFor="startTime"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Start Time
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                type="time"
-                id="startTime"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.startTime}
-              />
-              {formik.touched.startTime && formik.errors.startTime ? (
-                <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
-                  <p className="font-bold">{formik.errors.startTime}</p>
-                </div>
-              ) : null}
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="courseLength"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Start Time
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                type="text"
-                id="courseLength"
-                placeholder="ej: 1.5 hs"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.courseLength}
-              />
-              {formik.touched.courseLength && formik.errors.courseLength ? (
-                <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
-                  <p className="font-bold">{formik.errors.courseLength}</p>
-                </div>
-              ) : null}
-            </div>
-
+            <Duration formik={formik} />
             <Instructors setInstructor={setInstructor} />
             <StudentList setStudentList={setStudentList} />
 
@@ -204,6 +190,11 @@ const NewCourse = () => {
               type="submit"
               value="Create Course"
             />
+            {errorMsg? (
+                <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
+                  <p className="font-bold">{errorMsg}</p>
+                </div>
+              ) : null}
           </form>
         </div>
       </div>

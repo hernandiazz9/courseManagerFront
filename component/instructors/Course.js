@@ -1,7 +1,7 @@
 import React from "react";
 import Edit from "../courses/Edit";
 import Delete from "../courses/Delete";
-import Date from "../courses/Date";
+import Dates from "../courses/Dates";
 import Students from "../courses/StudentList";
 
 const Course = ({ course }) => {
@@ -17,7 +17,7 @@ const Course = ({ course }) => {
               </span>
               {course.title}
             </p>
-            <Date course={course}/>
+            <Dates course={course}/>
             <Students course={course} />
           </div>
           <div className="ml-2  flex-shrink-0 flex flex-row md:flex-col">

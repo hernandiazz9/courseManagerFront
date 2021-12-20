@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import Swal from "sweetalert2";
 import Instructors from "../../component/newCourses/Instructors";
 import StudentList from "../../component/newCourses/StudentList";
+import { format } from "date-fns";
 
 const GET_COURSE = gql`
   query GetCourse($getCourseId: ID!) {
@@ -14,7 +15,6 @@ const GET_COURSE = gql`
       id
       title
       startDate
-      startTime
       courseLength
       instructor {
         id
@@ -41,7 +41,6 @@ const EDIT_COURSE = gql`
       id
       title
       startDate
-      startTime
       courseLength
       instructor {
         id
@@ -69,19 +68,16 @@ const EditCourse = () => {
   const [prevInstructor, setPrevInstrutcor] = useState({});
   const [prevStudentList, setPrevStudentList] = useState({});
 
-  // console.log( instructor, studentList);
-
   const router = useRouter();
   const {
     query: { pid },
   } = router;
-  console.log(pid);
-  //get course by id
   const { data, loading } = useQuery(GET_COURSE, {
     variables: {
       getCourseId: pid,
     },
   });
+
   if (!loading && Object.keys(prevInstructor).length === 0)
     setPrevInstrutcor(data.getCourse.instructor);
   if (!loading && Object.keys(prevStudentList).length === 0)
@@ -97,7 +93,7 @@ const EditCourse = () => {
   //edit course
   const [editCourse] = useMutation(EDIT_COURSE);
   const editCourseById = async (values) => {
-    const { title, startDate, startTime, courseLength } = values;
+    const { title, startDate, courseLength } = values;
     try {
       await editCourse({
         variables: {
@@ -105,11 +101,9 @@ const EditCourse = () => {
           input: {
             title,
             startDate,
-            startTime,
             courseLength,
             instructor: prevInstructor.id,
             studentList: prevStudentList.id,
-            //agregar instructor ys tdent id............
           },
         },
       });
@@ -119,15 +113,23 @@ const EditCourse = () => {
       console.log(error);
     }
   };
-
   //validation
   const schemaValidation = Yup.object({
     title: Yup.string().required("Title is Require"),
     startDate: Yup.date().required("Date is Require"),
-    startTime: Yup.string().required("Start Time is Require"),
     courseLength: Yup.string().required("Course Lengthis Require"),
   });
-  // if (loading) return "cargando..";
+
+  if (!loading) {
+    var initialValues = {
+      ...data.getCourse,
+      startDate: format(
+        new Date(Number(data.getCourse.startDate)),
+        "yyyy-MM-dd'T'HH:mm"
+      ),
+    };
+  }
+
   return (
     <Layout>
       <h1 className="text-4xl my-6  text-center hidden md:block leading-6 font-medium text-black">
@@ -138,7 +140,7 @@ const EditCourse = () => {
           <Formik
             validationSchema={schemaValidation}
             enableReinitialize
-            initialValues={!loading ? data.getCourse : ""}
+            initialValues={!loading ? initialValues : ""}
             onSubmit={(values) => {
               editCourseById(values);
             }}
@@ -180,7 +182,7 @@ const EditCourse = () => {
                     </label>
                     <input
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                      type="date"
+                      type="datetime-local"
                       id="startDate"
                       onChange={props.handleChange}
                       onBlur={props.handleBlur}
@@ -189,27 +191,6 @@ const EditCourse = () => {
                     {props.touched.startDate && props.errors.startDate ? (
                       <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
                         <p className="font-bold">{props.errors.startDate}</p>
-                      </div>
-                    ) : null}
-                  </div>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="startTime"
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                    >
-                      Start Time
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                      type="time"
-                      id="startTime"
-                      onChange={props.handleChange}
-                      onBlur={props.handleBlur}
-                      value={props.values.startTime}
-                    />
-                    {props.touched.startTime && props.errors.startTime ? (
-                      <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
-                        <p className="font-bold">{props.errors.startTime}</p>
                       </div>
                     ) : null}
                   </div>

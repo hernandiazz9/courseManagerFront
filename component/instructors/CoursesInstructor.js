@@ -9,7 +9,6 @@ const GET_COURSE_BY_INSTRUCTOR = gql`
       id
       title
       startDate
-      startTime
       courseLength
       instructor {
         id
@@ -48,7 +47,9 @@ const CoursesInstructor = ({ instructor }) => {
           <span className=" text-sm font-light text-gray-500">
             Courses Asigned:{" "}
           </span>
-          {!loading && data.getCourseByInstructor.length}
+          {!loading &&
+            data.getCourseByInstructor &&
+            data.getCourseByInstructor.length}
         </span>
         <svg
           xmlns="http://www.w3.org/2000/svg"

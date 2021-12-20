@@ -1,7 +1,7 @@
 import React from "react";
 import Layout from "../component/Layout";
 import { useQuery, gql } from "@apollo/client";
-import Date from "../component/courses/Date";
+import Dates from "../component/courses/Dates";
 import Instructor from "../component/courses/Instructor";
 import StudentList from "../component/courses/StudentList";
 import Edit from "../component/courses/Edit";
@@ -14,7 +14,6 @@ const GET_COURSES = gql`
       id
       title
       startDate
-      startTime
       courseLength
       instructor {
         id
@@ -62,7 +61,7 @@ const Courses = () => {
                           <p className="text-md md:text-xl font-bold uppercase  text-gray-700 truncate">
                             {course.title}
                           </p>
-                          <Date course={course} />
+                          <Dates course={course} />
                           <Instructor course={course} />
                           <StudentList course={course} />
                         </div>

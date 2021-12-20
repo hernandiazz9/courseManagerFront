@@ -15,7 +15,7 @@ const GET_COURSES = gql`
       title
       startDate
       studentList
-      startTime
+
       courseLength
       instructor
     }
