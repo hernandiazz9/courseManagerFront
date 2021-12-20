@@ -20,7 +20,6 @@ const GET_INSTRUCTORS = gql`
 const Instructors = () => {
   const { data, loading } = useQuery(GET_INSTRUCTORS);
 
-
   return (
     <div>
       <Layout>
@@ -33,41 +32,49 @@ const Instructors = () => {
             Add Instructor
           </a>
         </Link>
-
-        <div className="bg-white mt-2 shadow overflow-hidden sm:rounded-md">
-          <ul className="divide-y divide-gray-300">
-            {!loading &&
-              data.getInstructors.map((instructor) => (
-                <li key={instructor.id}>
-                  <div className="block py-2 hover:bg-gray-50 tracking-wider">
-                    <div className="px-4 py-4 sm:px-6">
-                      <div className="flex flex-col md:flex-row items-center justify-between">
-                        <div>
-                          <p className="text-sm md:text-xl font-bold uppercase  text-gray-700 truncate">
-                            <span className=" lowercase text-sm font-light text-gray-500">
-                              Fullname:{" "}
-                            </span>
-                            {instructor.name} {instructor.lastName}
-                          </p>
-                          <p className=" text-md font-bold text-gray-600">
-                            <span className=" text-sm font-light text-gray-500">
-                              Email:{" "}
-                            </span>
-                            {instructor.email}
-                          </p>
-                          <CoursesInstructor instructor={instructor} />
-                        </div>
-                        <div className=" divider-y ml-2 sm:mt-4 pt-5 flex-shrink-0 flex flex-row md:flex-col">
-                          <Edit edit={instructor} url="editinstructor" />
-                          <Delete id={instructor.id} />
+        {!loading ? (
+          <div className="bg-white mt-2 shadow overflow-hidden sm:rounded-md">
+            <ul className="divide-y divide-gray-300">
+              {data.getInstructors.length > 0 ? (
+                data.getInstructors.map((instructor) => (
+                  <li key={instructor.id}>
+                    <div className="block py-2 hover:bg-gray-50 tracking-wider">
+                      <div className="px-4 py-4 sm:px-6">
+                        <div className="flex flex-col md:flex-row items-center justify-between">
+                          <div>
+                            <p className="text-sm md:text-xl font-bold uppercase  text-gray-700 truncate">
+                              <span className=" lowercase text-sm font-light text-gray-500">
+                                Fullname:{" "}
+                              </span>
+                              {instructor.name} {instructor.lastName}
+                            </p>
+                            <p className=" text-md font-bold text-gray-600">
+                              <span className=" text-sm font-light text-gray-500">
+                                Email:{" "}
+                              </span>
+                              {instructor.email}
+                            </p>
+                            <CoursesInstructor instructor={instructor} />
+                          </div>
+                          <div className=" divider-y ml-2 sm:mt-4 pt-5 flex-shrink-0 flex flex-row md:flex-col">
+                            <Edit edit={instructor} url="editinstructor" />
+                            <Delete id={instructor.id} />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </li>
-              ))}
-          </ul>
-        </div>
+                  </li>
+                ))
+              ) : (
+                <p className=" text-md font-bold py-6 text-center text-gray-600">
+                  No Instructor, add one
+                </p>
+              )}
+            </ul>
+          </div>
+        ) : (
+          <p>Loading . . .</p>
+        )}
       </Layout>
     </div>
   );

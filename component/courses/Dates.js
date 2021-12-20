@@ -2,7 +2,6 @@ import React from "react";
 import { addHours, addMinutes, format } from "date-fns";
 
 const Dates = ({ course }) => {
-  console.log(course, "courrs");
 
   const date = new Date(Number(course.startDate));
   const dateSelected = format(date, "yyyy-MM-dd'T'HH:mm");
@@ -12,7 +11,6 @@ const Dates = ({ course }) => {
   const untilHs = addMinutes(addHs, Number(hsMin[1]));
   const dateFormatUntil = format(untilHs, "MMMM dd, yyyy 'at' HH:mm 'hs' ");
 
-  // console.log(dateFormatUntil);
 
   return (
     <div className="mt-2 flex flex-col">

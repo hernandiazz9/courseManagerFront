@@ -49,10 +49,16 @@ const Courses = () => {
           New Course
         </a>
       </Link>
-      <div className="bg-white mt-2 shadow overflow-hidden sm:rounded-md">
-        <ul className="divide-y divide-gray-300">
-          {!loading
-            ? data.getCourses.map((course) => (
+      <Link href="/checkdays">
+        <a className="bg-blue-700 px-3 ml-3 py-2 md:px-5 mt-6 inline-block text-white rounded text-sm uppercase hover:bg-gray-700 font-bold mb-4 md:mb-10">
+          Check day
+        </a>
+      </Link>
+      {!loading ? (
+        <div className="bg-white mt-2 shadow overflow-hidden sm:rounded-md">
+          <ul className="divide-y divide-gray-300">
+            {data.getCourses.length > 0 ? (
+              data.getCourses.map((course) => (
                 <li key={course.id}>
                   <div className="block py-2 hover:bg-gray-50 tracking-wider">
                     <div className="px-4 py-4 sm:px-6">
@@ -74,9 +80,16 @@ const Courses = () => {
                   </div>
                 </li>
               ))
-            : "Loading..."}
-        </ul>
-      </div>
+            ) : (
+              <p className=" text-md font-bold py-6 text-center text-gray-600">
+                No Course, create one
+              </p>
+            )}
+          </ul>
+        </div>
+      ) : (
+        <p> Loading...</p>
+      )}
     </Layout>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../component/Layout";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -9,7 +9,7 @@ import StudentList from "../component/newCourses/StudentList";
 import Swal from "sweetalert2";
 import SelectDate from "../component/newCourses/SelectDate";
 import Duration from "../component/newCourses/Duration";
-import { format, addMinutes, addHours } from "date-fns";
+import { verifyDisponibilityOfInstructor } from "../helper/helper";
 
 const NEW_COURSE = gql`
   mutation NewCourse($input: CourseInput) {
@@ -65,11 +65,12 @@ const GET_COURSES = gql`
 `;
 
 const NewCourse = () => {
-  const { data, loading, error } = useQuery(GET_COURSES);
-  const [errorMsg, setErrorMsg] = useState(null)
+  const { data } = useQuery(GET_COURSES);
+  const [errorMsg, setErrorMsg] = useState(null);
   const [instructor, setInstructor] = useState({});
   const [studentList, setStudentList] = useState({});
   const router = useRouter();
+
   const [newCourse] = useMutation(NEW_COURSE, {
     update(cache, { data: { newCourse } }) {
       const { getCourses } = cache.readQuery({ query: GET_COURSES });
@@ -81,18 +82,6 @@ const NewCourse = () => {
       });
     },
   });
-  // console.log(data);
-  // if (!loading) {
-  //   const verify = data.getCourses.map((course) => {
-  //     const dateStart = new Date(Number(course.startDate));
-  //     const hsMin = course.courseLength.split(":");
-  //     const addHs = addHours(dateStart, Number(hsMin[0]));
-  //     const dateFinish = addMinutes(addHs, Number(hsMin[1]));
-
-  //     console.log(dateStart.getTime(), "/", dateFinish.getTime());
-
-  //   });
-  // }
 
   const formik = useFormik({
     initialValues: {
@@ -112,22 +101,16 @@ const NewCourse = () => {
 
     onSubmit: async (valores) => {
       const { title, startDate, courseHs, courseMin } = valores;
-      const dateSelect = new Date(startDate);
-
-      const verifyDisponibility = data.getCourses.filter((course) => {
-        const dateStart = new Date(Number(course.startDate));
-        const hsMin = course.courseLength.split(":");
-        const addHs = addHours(dateStart, Number(hsMin[0]));
-        const dateFinish = addMinutes(addHs, Number(hsMin[1]));
-        return (
-          dateSelect.getTime() > course.startDate &&
-          dateSelect.getTime() < dateFinish.getTime()
+      if (
+        verifyDisponibilityOfInstructor(
+          data.getCourses,
+          startDate,
+          instructor
+        ).find((t) => t === true)
+      )
+        return setErrorMsg(
+          "Instructor is already in other curse in the same time"
         );
-      });
-      const sameInstructor = verifyDisponibility.map((course) => {
-        return course.instructor.id === instructor.id;
-      });
-      if(sameInstructor.length >0)return setErrorMsg('Instructor is already in other curse in the same time')
       try {
         await newCourse({
           variables: {
@@ -143,60 +126,65 @@ const NewCourse = () => {
         Swal.fire("Created", "Course created succesfully", "success");
         router.push("/");
       } catch (error) {
-        console.log(error, "Error");
+        setErrorMsg(error.message);
       }
     },
   });
+
+  if (errorMsg) {
+    setTimeout(() => {
+      setErrorMsg(null);
+    }, 3000);
+  }
+
   return (
     <Layout>
       <h1 className="text-4xl my-6  text-center hidden md:block leading-6 font-medium text-black">
         New Course
       </h1>
       <div className="flex justify-center ">
-        <div className="w-full max-w-lg">
-          <form
-            onSubmit={formik.handleSubmit}
-            className="bg-white shadow-md px-8 pt-6 pb-8 mb-4"
-          >
-            <div className="mb-4">
-              <label
-                htmlFor="title"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Title
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                type="text"
-                id="title"
-                placeholder="Corse Title.."
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.title}
-              />
-              {formik.touched.title && formik.errors.title ? (
-                <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
-                  <p className="font-bold">{formik.errors.title}</p>
-                </div>
-              ) : null}
-            </div>
-            <SelectDate formik={formik} />
-            <Duration formik={formik} />
-            <Instructors setInstructor={setInstructor} />
-            <StudentList setStudentList={setStudentList} />
-
+        <form
+          onSubmit={formik.handleSubmit}
+          className="bg-white w-full max-w-lg shadow-md px-8 pt-6 pb-8 mb-4"
+        >
+          <div className="mb-4">
+            <label
+              htmlFor="title"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Title
+            </label>
             <input
-              className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
-              type="submit"
-              value="Create Course"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+              type="text"
+              id="title"
+              placeholder="Corse Title.."
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.title}
             />
-            {errorMsg? (
-                <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
-                  <p className="font-bold">{errorMsg}</p>
-                </div>
-              ) : null}
-          </form>
-        </div>
+            {formik.touched.title && formik.errors.title ? (
+              <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
+                <p className="font-bold">{formik.errors.title}</p>
+              </div>
+            ) : null}
+          </div>
+          <SelectDate formik={formik} />
+          <Duration formik={formik} />
+          <Instructors setInstructor={setInstructor} />
+          <StudentList setStudentList={setStudentList} />
+
+          <input
+            className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
+            type="submit"
+            value="Create Course"
+          />
+          {errorMsg ? (
+            <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
+              <p className="font-bold">{errorMsg}</p>
+            </div>
+          ) : null}
+        </form>
       </div>
     </Layout>
   );

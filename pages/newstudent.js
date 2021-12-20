@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Layout from "../component/Layout";
 import { useQuery, useMutation, gql } from "@apollo/client";
 import { useRouter } from "next/router";
@@ -28,6 +28,8 @@ const GET_STUDENTS = gql`
 `;
 
 const NewStudent = () => {
+  const [errorMsg, setErrorMsg] = useState(null);
+
   useQuery(GET_STUDENTS);
   const router = useRouter();
   const [newStudent] = useMutation(NEW_STUDENT, {
@@ -70,10 +72,16 @@ const NewStudent = () => {
         Swal.fire("Added", "Instructor added succesfully", "success");
         router.push("/students");
       } catch (error) {
-        console.log(error, "Error");
+        setErrorMsg(error.message);
       }
     },
   });
+
+  if (errorMsg) {
+    setTimeout(() => {
+      setErrorMsg(null);
+    }, 3000);
+  }
 
   return (
     <Layout>
@@ -158,6 +166,11 @@ const NewStudent = () => {
               type="submit"
               value="Add Student"
             />
+            {errorMsg ? (
+              <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
+                <p className="font-bold">{errorMsg}</p>
+              </div>
+            ) : null}
           </form>
         </div>
       </div>

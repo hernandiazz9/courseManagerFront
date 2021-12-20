@@ -135,106 +135,113 @@ const EditCourse = () => {
       <h1 className="text-4xl my-6  text-center hidden md:block leading-6 font-medium text-black">
         Edit Course
       </h1>
-      <div className="flex justify-center ">
-        <div className="w-full max-w-lg">
-          <Formik
-            validationSchema={schemaValidation}
-            enableReinitialize
-            initialValues={!loading ? initialValues : ""}
-            onSubmit={(values) => {
-              editCourseById(values);
-            }}
-          >
-            {(props) => {
-              return (
-                <form
-                  onSubmit={props.handleSubmit}
-                  className="bg-white shadow-md px-8 pt-6 pb-8 mb-4"
-                >
-                  <div className="mb-4">
-                    <label
-                      htmlFor="title"
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                    >
-                      Title
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                      type="text"
-                      id="title"
-                      placeholder="Corse Title.."
-                      onChange={props.handleChange}
-                      onBlur={props.handleBlur}
-                      value={props.values.title}
+      {!loading ? (
+        <div className="flex justify-center ">
+          <div className="w-full max-w-lg">
+            <Formik
+              validationSchema={schemaValidation}
+              enableReinitialize
+              initialValues={initialValues}
+              onSubmit={(values) => {
+                editCourseById(values);
+              }}
+            >
+              {(props) => {
+                return (
+                  <form
+                    onSubmit={props.handleSubmit}
+                    className="bg-white shadow-md px-8 pt-6 pb-8 mb-4"
+                  >
+                    <div className="mb-4">
+                      <label
+                        htmlFor="title"
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                      >
+                        Title
+                      </label>
+                      <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                        type="text"
+                        id="title"
+                        placeholder="Corse Title.."
+                        onChange={props.handleChange}
+                        onBlur={props.handleBlur}
+                        value={props.values.title}
+                      />
+                      {props.touched.title && props.errors.title ? (
+                        <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
+                          <p className="font-bold">{props.errors.title}</p>
+                        </div>
+                      ) : null}
+                    </div>
+                    <div className="mb-4">
+                      <label
+                        htmlFor="startDate"
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                      >
+                        Start Date
+                      </label>
+                      <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                        type="datetime-local"
+                        id="startDate"
+                        onChange={props.handleChange}
+                        onBlur={props.handleBlur}
+                        value={props.values.startDate}
+                      />
+                      {props.touched.startDate && props.errors.startDate ? (
+                        <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
+                          <p className="font-bold">{props.errors.startDate}</p>
+                        </div>
+                      ) : null}
+                    </div>
+                    <div className="mb-4">
+                      <label
+                        htmlFor="courseLength"
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                      >
+                        Course legth
+                      </label>
+                      <input
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                        type="text"
+                        id="courseLength"
+                        placeholder="ej: 1.5 hs"
+                        onChange={props.handleChange}
+                        onBlur={props.handleBlur}
+                        value={props.values.courseLength}
+                      />
+                      {props.touched.courseLength &&
+                      props.errors.courseLength ? (
+                        <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
+                          <p className="font-bold">
+                            {props.errors.courseLength}
+                          </p>
+                        </div>
+                      ) : null}
+                    </div>
+                    <Instructors
+                      prevInstructor={prevInstructor}
+                      setInstructor={setInstructor}
                     />
-                    {props.touched.title && props.errors.title ? (
-                      <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
-                        <p className="font-bold">{props.errors.title}</p>
-                      </div>
-                    ) : null}
-                  </div>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="startDate"
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                    >
-                      Start Date
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                      type="datetime-local"
-                      id="startDate"
-                      onChange={props.handleChange}
-                      onBlur={props.handleBlur}
-                      value={props.values.startDate}
+                    <StudentList
+                      prevStudentList={prevStudentList}
+                      setStudentList={setStudentList}
                     />
-                    {props.touched.startDate && props.errors.startDate ? (
-                      <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
-                        <p className="font-bold">{props.errors.startDate}</p>
-                      </div>
-                    ) : null}
-                  </div>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="courseLength"
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                    >
-                      Course legth
-                    </label>
                     <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                      type="text"
-                      id="courseLength"
-                      placeholder="ej: 1.5 hs"
-                      onChange={props.handleChange}
-                      onBlur={props.handleBlur}
-                      value={props.values.courseLength}
+                      className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
+                      type="submit"
+                      value="Edit Course"
                     />
-                    {props.touched.courseLength && props.errors.courseLength ? (
-                      <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
-                        <p className="font-bold">{props.errors.courseLength}</p>
-                      </div>
-                    ) : null}
-                  </div>
-                  <Instructors
-                    prevInstructor={prevInstructor}
-                    setInstructor={setInstructor}
-                  />
-                  <StudentList
-                    prevStudentList={prevStudentList}
-                    setStudentList={setStudentList}
-                  />
-                  <input
-                    className="bg-gray-800 w-full mt-5 p-2 text-white uppercase font-bold hover:bg-gray-900"
-                    type="submit"
-                    value="Edit Course"
-                  />
-                </form>
-              );
-            }}
-          </Formik>
+                  </form>
+                );
+              }}
+            </Formik>
+          </div>
         </div>
-      </div>
+      ) : (
+        <p>Loading . . .</p>
+      )}
     </Layout>
   );
 };

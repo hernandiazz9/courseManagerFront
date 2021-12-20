@@ -14,7 +14,7 @@ const Layout = ({ children }) => {
           crossorigin="anonymous"
           referrerpolicy="no-referrer"
         />
-        <script src="https://cdn.tailwindcss.com"></script>
+        {/* <script src="https://cdn.tailwindcss.com"></script> */}
       </Head>
       <div className="bg-gray-200  ">
         <div className=" flex flex-col md:flex-row  sm:min-w-screen md:min-h-screen ">

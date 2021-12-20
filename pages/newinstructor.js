@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Layout from "../component/Layout";
 import { useQuery, useMutation, gql } from "@apollo/client";
 import { useRouter } from "next/router";
@@ -28,6 +28,7 @@ const GET_INSTRUCTOR = gql`
 `;
 
 const NewInstructor = () => {
+  const [errorMsg, setErrorMsg] = useState(null);
   useQuery(GET_INSTRUCTOR);
   const router = useRouter();
   const [newInstructor] = useMutation(NEW_INSTRUCTOR, {
@@ -70,11 +71,15 @@ const NewInstructor = () => {
         Swal.fire("Added", "Instructor added succesfully", "success");
         router.push("/instructors");
       } catch (error) {
-        console.log(error, "Error");
+        setErrorMsg(error.message);
       }
     },
   });
-
+  if (errorMsg) {
+    setTimeout(() => {
+      setErrorMsg(null);
+    }, 3000);
+  }
   return (
     <Layout>
       <h1 className="text-4xl my-6  text-center hidden md:block leading-6 font-medium text-black">
@@ -158,6 +163,11 @@ const NewInstructor = () => {
               type="submit"
               value="Add Instructor"
             />
+            {errorMsg ? (
+              <div className="my-1 bg-red-100 border-l-4 border-red-500 text-red-700 p-2 ">
+                <p className="font-bold">{errorMsg}</p>
+              </div>
+            ) : null}
           </form>
         </div>
       </div>

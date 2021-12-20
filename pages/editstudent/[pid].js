@@ -27,6 +27,7 @@ const EDIT_STUDENT = gql`
 `;
 
 const EditStudent = () => {
+  
   const router = useRouter();
   const {
     query: { pid },
@@ -38,7 +39,6 @@ const EditStudent = () => {
       getStudentId: pid,
     },
   });
-  console.log(data);
 
   //edit student
   const [editStudent] = useMutation(EDIT_STUDENT);
@@ -75,12 +75,13 @@ const EditStudent = () => {
       <h1 className="text-4xl my-6  text-center hidden md:block leading-6 font-medium text-black">
         Edit Course
       </h1>
+      {!loading ?
       <div className="flex justify-center ">
         <div className="w-full max-w-lg">
           <Formik
             validationSchema={schemaValidation}
             enableReinitialize
-            initialValues={!loading && data.getStudent}
+            initialValues={ data.getStudent}
             onSubmit={(values) => {
               editStudentById(values);
             }}
@@ -169,6 +170,7 @@ const EditStudent = () => {
           </Formik>
         </div>
       </div>
+      :<p>Loading . . .</p>}
     </Layout>
   );
 };

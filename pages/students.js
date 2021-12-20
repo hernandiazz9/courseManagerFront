@@ -5,7 +5,6 @@ import Link from "next/link";
 import Edit from "../component/courses/Edit";
 import Delete from "../component/students/Delete";
 
-
 const GET_STUDENTS = gql`
   query GetStudents {
     getStudents {
@@ -37,41 +36,49 @@ const Students = () => {
             Student List
           </a>
         </Link>
-
-        <div className="bg-white mt-2 shadow overflow-hidden sm:rounded-md">
-          <ul className="divide-y divide-gray-300">
-            {!loading &&
-              data.getStudents.map((student) => (
-                <li key={student.id}>
-                  <div className="block py-2 hover:bg-gray-50 tracking-wider">
-                    <div className="px-4 py-4 sm:px-6">
-                      <div className="flex flex-col md:flex-row items-center justify-between">
-                        <div>
-                          <p className="text-sm md:text-xl font-bold uppercase  text-gray-700 truncate">
-                            <span className=" capitalize text-sm font-light text-gray-500">
-                              Fullname:{" "}
-                            </span>
-                            {student.name} {student.lastName}
-                          </p>
-                          <p className=" text-md font-bold text-gray-600">
-                            <span className=" text-sm font-light text-gray-500">
-                              Email:{" "}
-                            </span>
-                            {student.email}
-                          </p>
-                          {/* <CoursesInstructor student={student} /> */}
-                        </div>
-                        <div className=" divider-y ml-2 sm:mt-4 pt-5 flex-shrink-0 flex flex-row md:flex-col">
-                          <Edit edit={student} url="editstudent" />
-                          <Delete id={student.id} />
+        {!loading ? (
+          <div className="bg-white mt-2 shadow overflow-hidden sm:rounded-md">
+            <ul className="divide-y divide-gray-300">
+              {data.getStudents.length > 0 ? (
+                data.getStudents.map((student) => (
+                  <li key={student.id}>
+                    <div className="block py-2 hover:bg-gray-50 tracking-wider">
+                      <div className="px-4 py-4 sm:px-6">
+                        <div className="flex flex-col md:flex-row items-center justify-between">
+                          <div>
+                            <p className="text-sm md:text-xl font-bold uppercase  text-gray-700 truncate">
+                              <span className=" capitalize text-sm font-light text-gray-500">
+                                Fullname:{" "}
+                              </span>
+                              {student.name} {student.lastName}
+                            </p>
+                            <p className=" text-md font-bold text-gray-600">
+                              <span className=" text-sm font-light text-gray-500">
+                                Email:{" "}
+                              </span>
+                              {student.email}
+                            </p>
+                            {/* <CoursesInstructor student={student} /> */}
+                          </div>
+                          <div className=" divider-y ml-2 sm:mt-4 pt-5 flex-shrink-0 flex flex-row md:flex-col">
+                            <Edit edit={student} url="editstudent" />
+                            <Delete id={student.id} />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </li>
-              ))}
-          </ul>
-        </div>
+                  </li>
+                ))
+              ) : (
+                <p className=" text-md font-bold py-6 text-center text-gray-600">
+                  No Student, add one
+                </p>
+              )}
+            </ul>
+          </div>
+        ) : (
+          <p>Loading . . . </p>
+        )}
       </Layout>
     </div>
   );
