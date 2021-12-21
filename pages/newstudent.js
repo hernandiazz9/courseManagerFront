@@ -85,7 +85,7 @@ const NewStudent = () => {
   return (
     <Layout>
       <h1 className="text-4xl my-6  text-center hidden md:block leading-6 font-medium text-black">
-        New Instructor
+        New Student
       </h1>
       <div className="flex justify-center ">
         <div className="w-full max-w-lg">
