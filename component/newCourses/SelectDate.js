@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { compareAsc, format } from "date-fns";
+import React from "react";
+import { format } from "date-fns";
 
 const SelectDate = ({ formik }) => {
   let today = Date.now("yyyy/mm/dd");

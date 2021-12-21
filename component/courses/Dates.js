@@ -20,11 +20,11 @@ const Dates = ({ course }) => {
       </p>
       <p className=" text-md font-bold text-gray-600">
         <span className=" text-sm font-light text-gray-500">Until: </span>
-        <time dateTime="10:30">{dateFormatUntil}</time>
+        <time dateTime={untilHs}>{dateFormatUntil}</time>
       </p>
       <p className=" text-md font-bold text-gray-600">
         <span className=" text-sm font-light text-gray-500">duration: </span>
-        <time dateTime="10:30">{course.courseLength}</time>
+        <time >{course.courseLength}</time>
       </p>
     </div>
   );

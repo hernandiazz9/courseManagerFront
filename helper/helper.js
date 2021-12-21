@@ -19,3 +19,7 @@ export const verifyDisponibilityOfInstructor = (allCourses, startDate, instructo
 
   return sameInstructor;
 };
+
+// export const verifyDisponibilityOfStudent = (allCourses, startDate, instructor) => {
+
+// }

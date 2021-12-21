@@ -55,7 +55,6 @@ const NewInstructor = () => {
       email: Yup.string().required("Email Time is Require"),
     }),
     onSubmit: async (valores) => {
-      // console.log(valores);
       const { name, lastName, email } = valores;
       try {
         await newInstructor({
