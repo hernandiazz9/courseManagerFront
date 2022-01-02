@@ -2,7 +2,7 @@
 
 _Aplicacion Web para la administración de **Cursos** agregando **Tutores**, **Estudiantes** y creando **Listas de Estudianted** para luego crear un curso y asignarlos al mismo verificando la disponibilidad de tutores y de los estudiantes segun otros cursos previamente creados.
 
-## Imagenes 🎬
+## [DEMO](https://course-manager-challange.vercel.app/) 🎬
 
 
 
